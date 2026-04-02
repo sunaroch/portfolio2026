@@ -230,9 +230,21 @@
       iframe { width: 100% !important; height: 200px !important; margin-top: 24px; }
       .lb-arrow { display: none !important; }
     }
+
+    /* ── Page transition overlay ── */
+    #page-overlay {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 1;
+      transition: opacity 0.5s ease;
+    }
   </style>
 </head>
 <body>
+  <div id="page-overlay"></div>
 
   <div class="layout">
 
@@ -386,5 +398,24 @@
     }, { passive: true });
   </script>
 
+
+  <script>
+    // Page transition
+    const _overlay = document.getElementById('page-overlay');
+    window.addEventListener('DOMContentLoaded', () => {
+      requestAnimationFrame(() => { _overlay.style.opacity = '0'; });
+    });
+    function _navigateTo(url) {
+      _overlay.style.pointerEvents = 'all';
+      _overlay.style.opacity = '1';
+      setTimeout(() => { window.location.href = url; }, 500);
+    }
+    document.querySelectorAll('a[href]').forEach(a => {
+      const href = a.getAttribute('href');
+      if (href && !href.startsWith('#') && !href.startsWith('http') && !href.startsWith('mailto')) {
+        a.addEventListener('click', e => { e.preventDefault(); _navigateTo(href); });
+      }
+    });
+  </script>
 </body>
 </html>

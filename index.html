@@ -207,15 +207,28 @@
         right: auto;
         left: 0;
         text-align: left;
-        width: 85vw;
+        width: calc(100vw - 40px);
+        max-width: 280px;
       }
       #logo {
         max-width: 85vw;
       }
     }
+
+    /* ── Page transition overlay ── */
+    #page-overlay {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 1;
+      transition: opacity 0.5s ease;
+    }
   </style>
 </head>
 <body>
+  <div id="page-overlay"></div>
 
   <div id="bg-preview">
     <img id="bg-img" alt="">
@@ -508,12 +521,12 @@
       });
 
       el.addEventListener('click', () => {
-        if (tile.link) window.location.href = tile.link;
+        if (tile.link) _navigateTo(tile.link);
       });
 
       el.addEventListener('touchend', e => {
         e.preventDefault();
-        if (tile.link) window.location.href = tile.link;
+        if (tile.link) _navigateTo(tile.link);
       });
     });
 
@@ -538,6 +551,25 @@
     window.addEventListener('resize', recalculate);
 
     animate();
+  </script>
+
+  <script>
+    // Page transition
+    const _overlay = document.getElementById('page-overlay');
+    window.addEventListener('DOMContentLoaded', () => {
+      requestAnimationFrame(() => { _overlay.style.opacity = '0'; });
+    });
+    function _navigateTo(url) {
+      _overlay.style.pointerEvents = 'all';
+      _overlay.style.opacity = '1';
+      setTimeout(() => { window.location.href = url; }, 500);
+    }
+    document.querySelectorAll('a[href]').forEach(a => {
+      const href = a.getAttribute('href');
+      if (href && !href.startsWith('#') && !href.startsWith('http') && !href.startsWith('mailto')) {
+        a.addEventListener('click', e => { e.preventDefault(); _navigateTo(href); });
+      }
+    });
   </script>
 </body>
 </html>
