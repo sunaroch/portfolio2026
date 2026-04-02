@@ -511,24 +511,10 @@
         if (tile.link) window.location.href = tile.link;
       });
 
-      el.addEventListener('touchstart', () => {
-        bgPreview.classList.add('active');
-        if (tile.type === 'image') {
-          bgVideo.style.display = 'none';
-          bgImg.src = tile.src;
-          bgImg.style.display = 'block';
-        } else {
-          bgImg.style.display = 'none';
-          const base = getBaseSrc(tile.src);
-          while (bgVideo.firstChild) bgVideo.removeChild(bgVideo.firstChild);
-          const s1 = document.createElement('source');
-          s1.src = base + '.mp4'; s1.type = 'video/mp4';
-          bgVideo.appendChild(s1);
-          bgVideo.style.display = 'block';
-          bgVideo.load();
-          bgVideo.play().catch(() => {});
-        }
-      }, { passive: true });
+      el.addEventListener('touchend', e => {
+        e.preventDefault();
+        if (tile.link) window.location.href = tile.link;
+      });
     });
 
     // Work dropdown
