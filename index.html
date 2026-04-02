@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      overflow-y: scroll;
+      background: #000;
+      height: 500vh;
+    }
+
+    #helix-container {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: transparent;
+      z-index: 5;
+    }
+
+    #bg-preview {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    #bg-preview.active {
+      opacity: 1;
+    }
+
+    #bg-img, #bg-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+    }
+
+    .tile {
+      position: absolute;
+      border-radius: 0;
+      overflow: hidden;
+      transform-origin: 0 0;
+    }
+
+    .tile img,
+    .tile video {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    nav {
+      position: fixed;
+      top: 28px;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 28px;
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #c0bdb8;
+      font-weight: 300;
+      pointer-events: none;
+    }
+
+    nav a {
+      color: #c0bdb8;
+      text-decoration: none;
+      pointer-events: all;
+    }
+
+    .nav-name {
+      pointer-events: none;
+    }
+
+    .nav-links a + a,
+    .nav-work + a,
+    .nav-work + .nav-info {
+      margin-left: 80px;
+    }
+
+    .nav-work,
+    .nav-info {
+      position: relative;
+      display: inline-block;
+    }
+
+    .work-dropdown {
+      position: absolute;
+      top: calc(100% + 16px);
+      right: 0;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      text-align: right;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-4px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+
+    .work-dropdown.open {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateY(0);
+    }
+
+    .work-dropdown li {
+      line-height: 2.2;
+    }
+
+    .work-dropdown li a {
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #c0bdb8;
+      text-decoration: none;
+      font-weight: 300;
+      white-space: nowrap;
+    }
+
+    .work-dropdown li a:hover {
+      color: #fff;
+    }
+
+    .info-dropdown {
+      position: absolute;
+      top: calc(100% + 16px);
+      right: 0;
+      width: 260px;
+      text-align: right;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-weight: 300;
+      color: #c0bdb8;
+      line-height: 1.8;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-4px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+
+    .info-dropdown.open {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateY(0);
+    }
+
+    #logo {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+      pointer-events: none;
+      max-width: 1000px;
+      height: auto;
+      border: none;
+      box-shadow: none;
+      border-radius: 0;
+    }
+
+    @media (max-width: 768px) {
+      nav {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+        top: 20px;
+        padding: 0 20px;
+      }
+      .nav-links {
+        display: flex;
+        gap: 32px;
+      }
+      .nav-links a + a,
+      .nav-work + a,
+      .nav-work + .nav-info {
+        margin-left: 0;
+      }
+      .work-dropdown {
+        right: auto;
+        left: 0;
+        text-align: left;
+      }
+      .info-dropdown {
+        right: auto;
+        left: 0;
+        text-align: left;
+        width: 85vw;
+      }
+      #logo {
+        max-width: 85vw;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="bg-preview">
+    <img id="bg-img" alt="">
+    <video id="bg-video" autoplay loop muted playsinline></video>
+  </div>
+
+  <div id="helix-container"></div>
+
+  <img id="logo" src="public/logo.png" alt="Logo">
+
+  <nav>
+    <span class="nav-name">SUN AROCH</span>
+    <div class="nav-links">
+      <div class="nav-work" id="nav-work">
+        <a href="#" id="work-trigger">Work</a>
+        <ul class="work-dropdown" id="work-dropdown">
+          <li><a href="i-miss-everyone.html">I Miss Everyone</a></li>
+          <li><a href="a-hair-between-us.html">A Hair Between Us</a></li>
+          <li><a href="liquified-self-portrait.html">Liquified Self Portrait</a></li>
+          <li><a href="dtfa-website.html">DTFA Website</a></li>
+          <li><a href="suntina.html">Suntina</a></li>
+          <li><a href="archive.html">Archive</a></li>
+        </ul>
+      </div>
+<div class="nav-info" id="nav-info">
+        <a href="#">Info</a>
+        <div class="info-dropdown" id="info-dropdown">
+          Sun Aroch is a creative technologist from NYC. Currently pursuing a Masters in Applied AI for Art and Design, Sun seamlessly blends new technologies with her creativity.<br><br>
+          Email: arochsun@gmail.com<br>
+          Socials @sunaroch
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <script>
+    const TILES = [
+      // I Miss Everyone — videos
+      { src: 'public/imisseveryone/imisseveryone1.mp4',  type: 'video', w: 90,  h: 63,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone2.mp4',  type: 'video', w: 66,  h: 84,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone3.mp4',  type: 'video', w: 98,  h: 60,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone10.mp4', type: 'video', w: 64,  h: 85,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone11.mp4', type: 'video', w: 90,  h: 59,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone12.mp4', type: 'video', w: 67,  h: 88,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone13.mp4', type: 'video', w: 99,  h: 63,  link: 'i-miss-everyone.html' },
+      // I Miss Everyone — images
+      { src: 'public/imisseveryone/imisseveryone4.png',  type: 'image', w: 70,  h: 91,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone5.png',  type: 'image', w: 94,  h: 62,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone6.png',  type: 'image', w: 63,  h: 80,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone7.png',  type: 'image', w: 101, h: 64,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone8.png',  type: 'image', w: 62,  h: 82,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone9.png',  type: 'image', w: 97,  h: 60,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone14.png', type: 'image', w: 60,  h: 78,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone15.png', type: 'image', w: 104, h: 66,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone16.png', type: 'image', w: 66,  h: 87,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone17.png', type: 'image', w: 92,  h: 62,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone18.png', type: 'image', w: 68,  h: 90,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone19.png', type: 'image', w: 95,  h: 60,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone20.png', type: 'image', w: 63,  h: 81,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone21.png', type: 'image', w: 101, h: 64,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone22.png', type: 'image', w: 59,  h: 77,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone23.png', type: 'image', w: 98,  h: 62,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone24.png', type: 'image', w: 64,  h: 84,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone25.png', type: 'image', w: 94,  h: 59,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone26.png', type: 'image', w: 67,  h: 87,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone27.png', type: 'image', w: 97,  h: 63,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone28.png', type: 'image', w: 62,  h: 80,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone29.png', type: 'image', w: 102, h: 64,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone30.png', type: 'image', w: 66,  h: 85,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone32.png', type: 'image', w: 68,  h: 90,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone33.png', type: 'image', w: 95,  h: 62,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone34.png', type: 'image', w: 63,  h: 82,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone35.png', type: 'image', w: 99,  h: 63,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone36.png', type: 'image', w: 60,  h: 78,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone37.png', type: 'image', w: 98,  h: 60,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone38.png', type: 'image', w: 64,  h: 84,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone39.png', type: 'image', w: 92,  h: 59,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone40.jpg', type: 'image', w: 67,  h: 88,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone41.png', type: 'image', w: 91,  h: 63,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone42.png', type: 'image', w: 66,  h: 84,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone43.png', type: 'image', w: 98,  h: 60,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone44.png', type: 'image', w: 70,  h: 91,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone45.png', type: 'image', w: 94,  h: 62,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone46.png', type: 'image', w: 63,  h: 80,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone47.png', type: 'image', w: 101, h: 64,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone48.png', type: 'image', w: 62,  h: 82,  link: 'i-miss-everyone.html' },
+      // A Hair Between Us — images
+      { src: 'public/ahairbetweenus/ahairbetweenus1.png', type: 'image', w: 91,  h: 63,  link: 'a-hair-between-us.html' },
+      { src: 'public/ahairbetweenus/ahairbetweenus2.png', type: 'image', w: 64,  h: 84,  link: 'a-hair-between-us.html' },
+      { src: 'public/ahairbetweenus/ahairbetweenus3.png', type: 'image', w: 101, h: 62,  link: 'a-hair-between-us.html' },
+      { src: 'public/ahairbetweenus/ahairbetweenus4.png', type: 'image', w: 60,  h: 80,  link: 'a-hair-between-us.html' },
+      { src: 'public/ahairbetweenus/ahairbetweenus5.png', type: 'image', w: 97,  h: 64,  link: 'a-hair-between-us.html' },
+      { src: 'public/ahairbetweenus/ahairbetweenus6.png', type: 'image', w: 66,  h: 85,  link: 'a-hair-between-us.html' },
+      // Liquified Self Portrait — images
+      { src: 'public/liquified/liquified1.png', type: 'image', w: 91,  h: 63,  link: 'liquified-self-portrait.html' },
+      { src: 'public/liquified/liquified2.png', type: 'image', w: 64,  h: 84,  link: 'liquified-self-portrait.html' },
+      { src: 'public/liquified/liquified3.png', type: 'image', w: 101, h: 62,  link: 'liquified-self-portrait.html' },
+      { src: 'public/liquified/liquified4.jpg', type: 'image', w: 60,  h: 80,  link: 'liquified-self-portrait.html' },
+      { src: 'public/liquified/liquified5.jpg', type: 'image', w: 97,  h: 64,  link: 'liquified-self-portrait.html' },
+      // DTFA Website — videos
+      { src: 'public/DTFA/DTFA1.mp4', type: 'video', w: 91,  h: 63,  link: 'dtfa-website.html' },
+      { src: 'public/DTFA/DTFA2.mp4', type: 'video', w: 66,  h: 84,  link: 'dtfa-website.html' },
+      { src: 'public/DTFA/DTFA3.mp4', type: 'video', w: 98,  h: 60,  link: 'dtfa-website.html' },
+      // Suntina — images
+      { src: 'public/suntina/suntina1.gif',  type: 'image', w: 55,  h: 38,  link: 'suntina.html' },
+      { src: 'public/suntina/suntina2.png',  type: 'image', w: 40,  h: 52,  link: 'suntina.html' },
+      { src: 'public/suntina/suntina3.png',  type: 'image', w: 60,  h: 37,  link: 'suntina.html' },
+      { src: 'public/suntina/suntina4.gif',  type: 'image', w: 44,  h: 57,  link: 'suntina.html' },
+      { src: 'public/suntina/suntina5.png',  type: 'image', w: 58,  h: 38,  link: 'suntina.html' },
+      { src: 'public/suntina/suntina6.png',  type: 'image', w: 39,  h: 50,  link: 'suntina.html' },
+      { src: 'public/suntina/suntina7.png',  type: 'image', w: 62,  h: 40,  link: 'suntina.html' },
+      { src: 'public/suntina/suntina8.gif',  type: 'image', w: 38,  h: 51,  link: 'suntina.html' },
+      { src: 'public/suntina/suntina9.gif',  type: 'image', w: 59,  h: 37,  link: 'suntina.html' },
+      { src: 'public/suntina/suntina10.gif', type: 'image', w: 40,  h: 53,  link: 'suntina.html' },
+      { src: 'public/suntina/suntina11.gif', type: 'image', w: 55,  h: 36,  link: 'suntina.html' },
+      // Suntina — videos
+      { src: 'public/suntina/suntina12.mp4', type: 'video', w: 42,  h: 55,  link: 'suntina.html' },
+      { src: 'public/suntina/suntina13.mp4', type: 'video', w: 61,  h: 39,  link: 'suntina.html' },
+      // Archive — images
+      { src: 'public/archive/archive1.gif',  type: 'image', w: 55,  h: 38,  link: 'archive.html' },
+      { src: 'public/archive/archive2.jpg',  type: 'image', w: 41,  h: 52,  link: 'archive.html' },
+      { src: 'public/archive/archive3.png',  type: 'image', w: 60,  h: 37,  link: 'archive.html' },
+      { src: 'public/archive/archive4.png',  type: 'image', w: 44,  h: 57,  link: 'archive.html' },
+      { src: 'public/archive/archive5.gif',  type: 'image', w: 58,  h: 38,  link: 'archive.html' },
+      { src: 'public/archive/archive6.png',  type: 'image', w: 39,  h: 50,  link: 'archive.html' },
+      { src: 'public/archive/archive7.png',  type: 'image', w: 62,  h: 40,  link: 'archive.html' },
+      { src: 'public/archive/archive8.gif',  type: 'image', w: 38,  h: 51,  link: 'archive.html' },
+      { src: 'public/archive/archive9.png',  type: 'image', w: 59,  h: 37,  link: 'archive.html' },
+      { src: 'public/archive/archive10.png', type: 'image', w: 40,  h: 53,  link: 'archive.html' },
+      { src: 'public/archive/archive11.gif', type: 'image', w: 55,  h: 36,  link: 'archive.html' },
+      { src: 'public/archive/archive12.png', type: 'image', w: 42,  h: 55,  link: 'archive.html' },
+      { src: 'public/archive/archive13.png', type: 'image', w: 61,  h: 39,  link: 'archive.html' },
+      { src: 'public/archive/archive14.png', type: 'image', w: 37,  h: 49,  link: 'archive.html' },
+      { src: 'public/archive/archive15.png', type: 'image', w: 64,  h: 41,  link: 'archive.html' },
+      { src: 'public/archive/archive16.png', type: 'image', w: 41,  h: 54,  link: 'archive.html' },
+      { src: 'public/archive/archive17.png', type: 'image', w: 57,  h: 38,  link: 'archive.html' },
+      { src: 'public/archive/archive18.png', type: 'image', w: 43,  h: 56,  link: 'archive.html' },
+      { src: 'public/archive/archive19.png', type: 'image', w: 59,  h: 37,  link: 'archive.html' },
+      { src: 'public/archive/archive20.png', type: 'image', w: 39,  h: 51,  link: 'archive.html' },
+      { src: 'public/archive/archive21.png', type: 'image', w: 62,  h: 40,  link: 'archive.html' },
+      { src: 'public/archive/archive22.gif', type: 'image', w: 36,  h: 48,  link: 'archive.html' },
+      { src: 'public/archive/archive23.png', type: 'image', w: 60,  h: 38,  link: 'archive.html' },
+    ];
+
+    // Shuffle tiles
+    for (let i = TILES.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [TILES[i], TILES[j]] = [TILES[j], TILES[i]];
+    }
+
+    let TURNS, amplitude, centerX, viewportWidth, viewportHeight;
+
+    function recalculate() {
+      viewportWidth  = window.innerWidth;
+      viewportHeight = window.innerHeight;
+      centerX        = viewportWidth / 2;
+
+      if (viewportWidth < 600) {
+        TURNS     = 1.5;
+        amplitude = viewportWidth * 0.22;
+      } else {
+        TURNS     = 2.2;
+        amplitude = viewportWidth * 0.29;
+      }
+    }
+
+    function getBaseSrc(src) {
+      return src.replace(/\.[^/.]+$/, '');
+    }
+
+    function createTileEl(tile) {
+      const div = document.createElement('div');
+      div.className = 'tile';
+      div.style.width = tile.w + 'px';
+      // height is auto — determined by media's natural aspect ratio
+
+      if (tile.type === 'image') {
+        const img = document.createElement('img');
+        img.src = tile.src;
+        img.onload = () => { tile._h = div.offsetHeight; };
+        div.appendChild(img);
+      } else {
+        const video = document.createElement('video');
+        video.autoplay    = true;
+        video.loop        = true;
+        video.muted       = true;
+        video.playsInline = true;
+
+        const base = getBaseSrc(tile.src);
+
+        const srcMp4 = document.createElement('source');
+        srcMp4.src  = base + '.mp4';
+        srcMp4.type = 'video/mp4';
+
+        const srcMov = document.createElement('source');
+        srcMov.src  = base + '.mov';
+        srcMov.type = 'video/quicktime';
+
+        video.appendChild(srcMp4);
+        video.appendChild(srcMov);
+        video.addEventListener('loadedmetadata', () => { tile._h = div.offsetHeight; });
+        div.appendChild(video);
+      }
+
+      return div;
+    }
+
+    recalculate();
+
+    const container = document.getElementById('helix-container');
+    const tileEls   = TILES.map(tile => {
+      const el = createTileEl(tile);
+      container.appendChild(el);
+      return el;
+    });
+
+    function getActiveCount() {
+      return viewportWidth < 600 ? 8 : 19;
+    }
+
+    let autoOffset = 0;
+
+    function animate() {
+      const N = getActiveCount();
+      const maxScroll = document.body.scrollHeight - window.innerHeight;
+      const scrollOffset = maxScroll > 0 ? window.scrollY / maxScroll : 0;
+      const offset = (autoOffset + scrollOffset) % 1;
+
+      tileEls.forEach((el, i) => {
+        el.style.display = i < N ? '' : 'none';
+      });
+
+      for (let i = 0; i < N; i++) {
+        const tile  = TILES[i];
+        const el    = tileEls[i];
+        const t     = ((i / N) + offset) % 1;
+        const angle = t * 2 * Math.PI * TURNS;
+        const x     = centerX + Math.cos(angle) * amplitude;
+        const y     = -viewportHeight * 0.35 + t * viewportHeight * 1.7;
+        const depth = (Math.sin(angle) + 1) / 2;
+        const scale   = 0.65 + depth * 0.7;
+        const opacity = 0.25 + depth * 0.75;
+        const zIndex  = Math.round(depth * 20);
+
+        const h  = tile._h || tile.h;
+        const tx = x - (tile.w * scale) / 2;
+        const ty = y - (h * scale) / 2;
+
+        el.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
+        el.style.opacity   = opacity;
+        el.style.zIndex    = zIndex;
+      }
+
+      autoOffset = (autoOffset + 0.0003) % 1;
+      requestAnimationFrame(animate);
+    }
+
+    // Hover preview
+    const bgPreview = document.getElementById('bg-preview');
+    const bgImg     = document.getElementById('bg-img');
+    const bgVideo   = document.getElementById('bg-video');
+
+    tileEls.forEach((el, i) => {
+      const tile = TILES[i];
+
+      el.addEventListener('mouseenter', () => {
+        if (tile.type === 'image') {
+          bgVideo.style.display = 'none';
+          bgImg.src = tile.src;
+          bgImg.style.display = 'block';
+        } else {
+          bgImg.style.display = 'none';
+          const base = getBaseSrc(tile.src);
+          while (bgVideo.firstChild) bgVideo.removeChild(bgVideo.firstChild);
+          const s1 = document.createElement('source');
+          s1.src = base + '.mp4'; s1.type = 'video/mp4';
+          const s2 = document.createElement('source');
+          s2.src = base + '.mov'; s2.type = 'video/quicktime';
+          bgVideo.appendChild(s1);
+          bgVideo.appendChild(s2);
+          bgVideo.style.display = 'block';
+          bgVideo.load();
+          bgVideo.play().catch(() => {});
+        }
+        bgPreview.classList.add('active');
+      });
+
+      el.addEventListener('mouseleave', () => {
+        bgPreview.classList.remove('active');
+      });
+
+      el.addEventListener('click', () => {
+        if (tile.link) window.location.href = tile.link;
+      });
+
+      el.addEventListener('touchstart', () => {
+        bgPreview.classList.add('active');
+        if (tile.type === 'image') {
+          bgVideo.style.display = 'none';
+          bgImg.src = tile.src;
+          bgImg.style.display = 'block';
+        } else {
+          bgImg.style.display = 'none';
+          const base = getBaseSrc(tile.src);
+          while (bgVideo.firstChild) bgVideo.removeChild(bgVideo.firstChild);
+          const s1 = document.createElement('source');
+          s1.src = base + '.mp4'; s1.type = 'video/mp4';
+          bgVideo.appendChild(s1);
+          bgVideo.style.display = 'block';
+          bgVideo.load();
+          bgVideo.play().catch(() => {});
+        }
+      }, { passive: true });
+    });
+
+    // Work dropdown
+    const navWork    = document.getElementById('nav-work');
+    const workDropdown = document.getElementById('work-dropdown');
+
+    navWork.querySelector('a').addEventListener('click', (e) => {
+      e.preventDefault();
+      workDropdown.classList.toggle('open');
+    });
+    workDropdown.addEventListener('click', (e) => e.stopPropagation());
+
+    const navInfo      = document.getElementById('nav-info');
+    const infoDropdown = document.getElementById('info-dropdown');
+    navInfo.querySelector('a').addEventListener('click', (e) => {
+      e.preventDefault();
+      infoDropdown.classList.toggle('open');
+    });
+    infoDropdown.addEventListener('click', (e) => e.stopPropagation());
+
+    window.addEventListener('resize', recalculate);
+
+    animate();
+  </script>
+</body>
+</html>

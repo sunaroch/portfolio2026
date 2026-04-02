@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Liquified Self Portrait — Sun Aroch</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #000;
+      color: #c0bdb8;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .layout {
+      display: flex;
+      height: 100vh;
+    }
+
+    .left-panel {
+      flex: 0 0 42%;
+      height: 100vh;
+      padding: 28px;
+      padding-top: 180px;
+      display: flex;
+      flex-direction: column;
+      border-right: none;
+    }
+
+    .back-arrow {
+      position: fixed;
+      top: 28px;
+      left: 28px;
+      font-size: 11px;
+      color: #c0bdb8;
+      text-decoration: none;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+      display: inline-block;
+      font-weight: 300;
+      z-index: 200;
+    }
+    .back-arrow:hover { color: #fff; }
+
+    .project-nav {
+      position: fixed;
+      top: 28px;
+      right: 28px;
+      z-index: 200;
+      display: flex;
+      gap: 24px;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-weight: 300;
+    }
+
+    .project-nav a {
+      color: #c0bdb8;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .project-nav a:hover { color: #fff; }
+
+    .project-title {
+      font-size: 17px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 300;
+      color: #c0bdb8;
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+
+    .project-blurb {
+      font-size: 13px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      line-height: 2.2;
+      font-weight: 300;
+      color: #999;
+      margin-bottom: 40px;
+      max-width: 360px;
+    }
+
+    .project-meta {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-weight: 300;
+      color: #666;
+      line-height: 2.4;
+    }
+
+    .right-panel {
+      flex: 1;
+      height: 100vh;
+      overflow-y: auto;
+      padding: 28px 28px 80px;
+    }
+
+    .right-panel::-webkit-scrollbar { display: none; }
+
+    .media-grid {
+      position: relative;
+      width: 100%;
+    }
+
+    .grid-item {
+      position: absolute;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .grid-item img,
+    .grid-item video {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: opacity 0.25s ease;
+    }
+
+    .grid-item:hover img,
+    .grid-item:hover video {
+      opacity: 0.75;
+    }
+
+    #lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.95);
+      z-index: 500;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #lightbox.open { display: flex; }
+
+    #lb-media {
+      max-width: 80vw;
+      max-height: 85vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #lb-media img,
+    #lb-media video {
+      max-width: 80vw;
+      max-height: 85vh;
+      object-fit: contain;
+      display: block;
+    }
+
+    .lb-arrow {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #555;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 20px;
+      transition: color 0.2s;
+      z-index: 501;
+      letter-spacing: 0;
+    }
+    .lb-arrow:hover { color: #fff; }
+    #lb-prev { left: 20px; }
+    #lb-next { right: 20px; }
+
+    #lb-close {
+      position: fixed;
+      top: 24px;
+      right: 28px;
+      background: none;
+      border: none;
+      color: #555;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 8px;
+      transition: color 0.2s;
+      z-index: 501;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    #lb-close:hover { color: #fff; }
+
+    #lb-counter {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #444;
+    }
+
+    @media (max-width: 768px) {
+      body { overflow: auto; height: auto; }
+      .layout { flex-direction: column; height: auto; }
+      .left-panel {
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid #1a1a1a;
+        padding-top: 80px;
+        padding-bottom: 40px;
+      }
+      .right-panel { height: auto; overflow-y: visible; min-height: 50vh; }
+      .project-nav {
+        position: fixed;
+        top: auto;
+        bottom: 28px;
+        right: 28px;
+        font-size: 18px;
+        gap: 36px;
+        background: rgba(0,0,0,0.6);
+        padding: 10px 16px;
+        border-radius: 4px;
+      }
+      .project-blurb { font-size: 12px; }
+      .project-meta { font-size: 10px; }
+      iframe { width: 100% !important; height: 200px !important; margin-top: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="layout">
+
+    <!-- Left panel -->
+    <div class="left-panel">
+      <a href="index.html" class="back-arrow">Sun Aroch</a>
+
+    <nav class="project-nav">
+      <a href="a-hair-between-us.html">←</a>
+      <a href="dtfa-website.html">→</a>
+    </nav>
+
+      <div class="project-title">
+        <a href="https://youtu.be/lhifd94k0Ck?si=YnFF85EGCTTDyW7y" target="_blank" style="color:inherit;text-decoration:none;border-bottom:1px solid #444;">Liquified Self Portrait</a>
+      </div>
+
+      <p class="project-blurb">
+        A mirror between me and my past self. I used MediaPipe hand-tracking to move between three video states: an AI-distorted live feed, my live feed layered with footage of me as a newborn, and the baby video on its own, with pink audio-reactive flashes. The soundscape is built from a granulator and a recording of my mom saying my name right after I was born.
+      </p>
+
+      <div class="project-meta">
+        <div>Category: TouchDesigner + StreamDiffusion</div>
+        <div>Medium: Video</div>
+        <div>Year: 2026</div>
+      </div>
+
+      <iframe src="https://www.youtube.com/embed/lhifd94k0Ck" style="width:100%;height:320px;display:block;margin-top:auto;border:none;" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    </div>
+
+    <!-- Right panel -->
+    <div class="right-panel">
+      <div class="media-grid" id="media-grid"></div>
+    </div>
+
+  </div>
+
+  <!-- Lightbox -->
+  <div id="lightbox">
+    <button class="lb-arrow" id="lb-prev">←</button>
+    <div id="lb-media"></div>
+    <button class="lb-arrow" id="lb-next">→</button>
+    <button id="lb-close">✕</button>
+    <div id="lb-counter"></div>
+  </div>
+
+  <script>
+    const images = [
+      'public/liquified/liquified1.png',
+      'public/liquified/liquified2.png',
+      'public/liquified/liquified3.png',
+      'public/liquified/liquified4.jpg',
+      'public/liquified/liquified5.jpg',
+    ];
+
+    // Shuffle
+    for (let i = images.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [images[i], images[j]] = [images[j], images[i]];
+    }
+
+    const media = images.map(src => ({ type: 'image', src }));
+
+    // Build grid
+    const grid = document.getElementById('media-grid');
+    media.forEach((item, i) => {
+      const div = document.createElement('div');
+      div.className = 'grid-item';
+      div.dataset.index = i;
+      const img = document.createElement('img');
+      img.src = item.src;
+      img.alt = '';
+      div.appendChild(img);
+      grid.appendChild(div);
+    });
+
+    // Collage layout
+    const containerWidth = grid.offsetWidth;
+    const rowHeight = 380;
+    const rows = media.length;
+    const items2 = Array.from(grid.querySelectorAll('.grid-item'));
+    items2.forEach((el, i) => {
+      const width = containerWidth * (0.4 + Math.random() * 0.45);
+      const maxLeft = containerWidth - width;
+      const left = Math.random() * maxLeft;
+      const baseY = i * rowHeight;
+      const offsetY = (Math.random() - 0.5) * rowHeight * 0.6;
+      el.style.left = left + 'px';
+      el.style.top = Math.max(0, baseY + offsetY) + 'px';
+      el.style.width = width + 'px';
+      el.style.zIndex = Math.floor(Math.random() * 15);
+    });
+    grid.style.height = (rows * rowHeight + 300) + 'px';
+
+    // Build media list
+    const items = Array.from(document.querySelectorAll('.grid-item'));
+    const mediaList = items.map(el => {
+      const img = el.querySelector('img');
+      if (img) return { type: 'image', src: img.src };
+    });
+
+    let current = 0;
+    const lightbox  = document.getElementById('lightbox');
+    const lbMedia   = document.getElementById('lb-media');
+    const lbCounter = document.getElementById('lb-counter');
+
+    function openLightbox(index) {
+      current = index;
+      renderLightbox();
+      lightbox.classList.add('open');
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('open');
+      lbMedia.innerHTML = '';
+    }
+
+    function renderLightbox() {
+      lbMedia.innerHTML = '';
+      const item = mediaList[current];
+      const img = document.createElement('img');
+      img.src = item.src;
+      lbMedia.appendChild(img);
+      lbCounter.textContent = `${current + 1} / ${mediaList.length}`;
+    }
+
+    function prev() { current = (current - 1 + mediaList.length) % mediaList.length; renderLightbox(); }
+    function next() { current = (current + 1) % mediaList.length; renderLightbox(); }
+
+    items.forEach((el, i) => el.addEventListener('click', () => openLightbox(i)));
+    document.getElementById('lb-prev').addEventListener('click', prev);
+    document.getElementById('lb-next').addEventListener('click', next);
+    document.getElementById('lb-close').addEventListener('click', closeLightbox);
+
+    lightbox.addEventListener('click', e => {
+      if (e.target === lightbox) closeLightbox();
+    });
+
+    document.addEventListener('keydown', e => {
+      if (!lightbox.classList.contains('open')) return;
+      if (e.key === 'ArrowLeft')  prev();
+      if (e.key === 'ArrowRight') next();
+      if (e.key === 'Escape')     closeLightbox();
+    });
+  </script>
+
+</body>
+</html>
