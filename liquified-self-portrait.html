@@ -322,7 +322,7 @@
 
     // Collage layout
     const containerWidth = grid.offsetWidth;
-    const rowHeight = 380;
+    const rowHeight = window.innerWidth < 768 ? 180 : 380;
     const rows = media.length;
     const items2 = Array.from(grid.querySelectorAll('.grid-item'));
     items2.forEach((el, i) => {
