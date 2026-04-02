@@ -232,14 +232,17 @@
     }
 
     /* ── Page transition overlay ── */
+    @keyframes _overlayFadeIn {
+      from { opacity: 1; }
+      to   { opacity: 0; }
+    }
     #page-overlay {
       position: fixed;
       inset: 0;
       background: #000;
       z-index: 9999;
       pointer-events: none;
-      opacity: 1;
-      transition: opacity 0.5s ease;
+      animation: _overlayFadeIn 0.6s ease forwards;
     }
   </style>
 </head>
@@ -402,12 +405,14 @@
   <script>
     // Page transition
     const _overlay = document.getElementById('page-overlay');
-    window.addEventListener('DOMContentLoaded', () => {
-      requestAnimationFrame(() => { _overlay.style.opacity = '0'; });
-    });
     function _navigateTo(url) {
-      _overlay.style.pointerEvents = 'all';
+      _overlay.style.animation = 'none';
+      _overlay.style.transition = 'none';
+      _overlay.style.opacity = '0';
+      void _overlay.offsetHeight; // force reflow
+      _overlay.style.transition = 'opacity 0.5s ease';
       _overlay.style.opacity = '1';
+      _overlay.style.pointerEvents = 'all';
       setTimeout(() => { window.location.href = url; }, 500);
     }
     document.querySelectorAll('a[href]').forEach(a => {
