@@ -209,7 +209,7 @@
       .left-panel {
         height: auto;
         border-right: none;
-        border-bottom: 1px solid #1a1a1a;
+        
         padding-top: 80px;
         padding-bottom: 40px;
       }
@@ -228,6 +228,7 @@
       .project-blurb { font-size: 12px; }
       .project-meta { font-size: 10px; }
       iframe { width: 100% !important; height: 200px !important; margin-top: 24px; }
+      .lb-arrow { display: none !important; }
     }
   </style>
 </head>
@@ -416,6 +417,14 @@
       if (e.key === 'ArrowRight') next();
       if (e.key === 'Escape')     closeLightbox();
     });
+
+    // Swipe support
+    let _swipeX = 0;
+    lightbox.addEventListener('touchstart', e => { _swipeX = e.touches[0].clientX; }, { passive: true });
+    lightbox.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - _swipeX;
+      if (Math.abs(dx) > 50) { dx < 0 ? next() : prev(); }
+    }, { passive: true });
   </script>
 
 </body>
