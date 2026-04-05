@@ -434,6 +434,14 @@
         a.addEventListener('click', e => { e.preventDefault(); _navigateTo(href); });
       }
     });
+    // Fix Safari bfcache: reset overlay when page is restored from back/forward cache
+    window.addEventListener('pageshow', e => {
+      if (e.persisted) {
+        _overlay.style.transition = 'none';
+        _overlay.style.opacity = '0';
+        _overlay.style.pointerEvents = 'none';
+      }
+    });
   </script>
 </body>
 </html>
