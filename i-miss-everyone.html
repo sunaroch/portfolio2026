@@ -403,7 +403,8 @@
 
     // Collage layout
     const containerWidth = grid.offsetWidth;
-    const rowHeight = 180;
+    const isMobile = window.innerWidth < 768;
+    const rowHeight = isMobile ? 140 : 260;
     const itemsPerRow = 4;
     const rows = Math.ceil(media.length / itemsPerRow);
     const items2 = Array.from(grid.querySelectorAll('.grid-item'));
@@ -411,7 +412,7 @@
       const col = i % itemsPerRow;
       const row = Math.floor(i / itemsPerRow);
       const colWidth = containerWidth / itemsPerRow;
-      const width = colWidth * (0.9 + Math.random() * 0.35);
+      const width = colWidth * (isMobile ? (0.9 + Math.random() * 0.35) : (0.7 + Math.random() * 0.35));
       const baseX = col * colWidth;
       const offsetX = (Math.random() - 0.5) * colWidth * 0.4;
       const baseY = row * rowHeight;

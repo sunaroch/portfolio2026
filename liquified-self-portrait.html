@@ -336,11 +336,12 @@
 
     // Collage layout
     const containerWidth = grid.offsetWidth;
-    const rowHeight = window.innerWidth < 768 ? 220 : 360;
+    const isMobile = window.innerWidth < 768;
+    const rowHeight = isMobile ? 160 : 500;
     const rows = media.length;
     const items2 = Array.from(grid.querySelectorAll('.grid-item'));
     items2.forEach((el, i) => {
-      const width = containerWidth * (0.55 + Math.random() * 0.2);
+      const width = containerWidth * (isMobile ? (0.55 + Math.random() * 0.2) : (0.38 + Math.random() * 0.18));
       const maxLeft = containerWidth - width;
       const left = Math.random() * maxLeft;
       const baseY = i * rowHeight;
