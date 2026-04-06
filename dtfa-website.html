@@ -24,7 +24,7 @@
       flex: 0 0 42%;
       height: 100vh;
       padding: 28px;
-      padding-top: 160px;
+      padding-top: 320px;
       display: flex;
       flex-direction: column;
       border-right: none;
@@ -34,27 +34,27 @@
       position: fixed;
       top: 28px;
       left: 28px;
-      font-size: 11px;
+      font-size: 42px;
       color: #c0bdb8;
       text-decoration: none;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
       transition: color 0.2s;
       display: inline-block;
       font-weight: 300;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
       z-index: 200;
     }
     .back-arrow:hover { color: #fff; }
 
     .project-nav {
       position: fixed;
-      left: calc(42% - 80px);
+      left: calc(42% - 120px);
       top: 28px;
       z-index: 200;
       display: flex;
       flex-direction: row;
       gap: 24px;
-      font-size: 26px;
+      font-size: 42px;
       font-weight: 300;
     }
 
@@ -67,7 +67,7 @@
     .project-nav a:hover { color: #fff; }
 
     .project-title {
-      font-size: 17px;
+      font-size: 40px;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       font-weight: 300;
@@ -77,13 +77,13 @@
     }
 
     .project-blurb {
-      font-size: 13px;
-      letter-spacing: 0.1em;
-      line-height: 1.47;
-      font-weight: 300;
+      font-size: 28px;
+      letter-spacing: 0.03em;
+      line-height: 1.6;
+      font-weight: 600;
       color: #999;
-      margin-bottom: 40px;
-      max-width: 360px;
+      margin-bottom: 28px;
+      max-width: 600px;
     }
 
     .project-meta {
@@ -266,11 +266,6 @@
         Showcasing hundreds of art pieces handled by the client in a clean, scalable yet artistic way.
       </p>
 
-      <div class="project-meta">
-        <div>Category: Web Design</div>
-        <div>Medium: Web</div>
-        <div>Year: 2025</div>
-      </div>
     </div>
 
     <!-- Right panel -->
@@ -325,7 +320,7 @@
 
     // Collage layout
     const containerWidth = grid.offsetWidth;
-    const rowHeight = window.innerWidth < 768 ? 180 : 520;
+    const rowHeight = window.innerWidth < 768 ? 180 : 700;
     const rows = media.length;
     const items2 = Array.from(grid.querySelectorAll('.grid-item'));
     items2.forEach((el, i) => {

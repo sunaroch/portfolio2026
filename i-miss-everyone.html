@@ -11,8 +11,7 @@
       font-family: system-ui, -apple-system, sans-serif;
       background: #000;
       color: #c0bdb8;
-      height: 100vh;
-      overflow: hidden;
+      overflow-y: auto;
     }
 
     /* ── Two-panel layout ── */
@@ -26,37 +25,38 @@
       flex: 0 0 42%;
       height: 100vh;
       padding: 28px;
-      padding-top: 160px;
+      padding-top: 320px;
       display: flex;
       flex-direction: column;
       border-right: none;
+      overflow: hidden;
     }
 
     .back-arrow {
       position: fixed;
       top: 28px;
       left: 28px;
-      font-size: 11px;
+      font-size: 42px;
       color: #c0bdb8;
       text-decoration: none;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
       transition: color 0.2s;
       display: inline-block;
       font-weight: 300;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
       z-index: 200;
     }
     .back-arrow:hover { color: #fff; }
 
     .project-nav {
       position: fixed;
-      left: calc(42% - 80px);
+      left: calc(42% - 120px);
       top: 28px;
       z-index: 200;
       display: flex;
       flex-direction: row;
       gap: 24px;
-      font-size: 26px;
+      font-size: 42px;
       font-weight: 300;
     }
 
@@ -69,7 +69,7 @@
     .project-nav a:hover { color: #fff; }
 
     .project-title {
-      font-size: 17px;
+      font-size: 40px;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       font-weight: 300;
@@ -79,13 +79,13 @@
     }
 
     .project-blurb {
-      font-size: 13px;
-      letter-spacing: 0.1em;
-      line-height: 1.47;
-      font-weight: 300;
+      font-size: 28px;
+      letter-spacing: 0.03em;
+      line-height: 1.6;
+      font-weight: 600;
       color: #999;
-      margin-bottom: 40px;
-      max-width: 360px;
+      margin-bottom: 28px;
+      max-width: 600px;
     }
 
     .project-meta {
@@ -97,15 +97,18 @@
       line-height: 2.4;
     }
 
-    /* Right — scrollable grid */
+    /* Right — video panel */
     .right-panel {
       flex: 1;
       height: 100vh;
-      overflow-y: auto;
-      padding: 28px 28px 80px;
+      overflow: hidden;
     }
 
-    .right-panel::-webkit-scrollbar { display: none; }
+    /* Collage section below the fold */
+    .collage-section {
+      width: 100%;
+      padding: 28px 28px 80px;
+    }
 
     .media-grid {
       position: relative;
@@ -258,7 +261,7 @@
       <a href="index.html" class="back-arrow">Sun Aroch</a>
 
     <nav class="project-nav">
-      <a href="dtfa-website.html">←</a>
+      <a href="archive.html">←</a>
       <a href="a-hair-between-us.html">→</a>
     </nav>
 
@@ -268,23 +271,33 @@
 
       <p class="project-blurb">
         A visual exploration which illustrates a relationship with AI not just as a working tool, but as a habitual emotional fix.<br><br>
-        What does it look like to miss someone? What does it sound like? How much closer can we get to reliving an experience with AI? How many worlds can we reach? At what point does it become just another escape?
+        What does it look like to miss someone?<br>
+        What does it sound like?<br>
+        How much closer can we get to reliving an experience with AI?<br>
+        How many worlds can we reach?<br>
+        At what point does it become just another escape?
       </p>
 
-      <div class="project-meta">
-        <div>Category: AI Generated</div>
-        <div>Medium: Video + Image</div>
-        <div>Year: 2025</div>
-      </div>
-
-      <iframe src="https://www.youtube.com/embed/opUlCLyaEWI" style="width:100%;height:320px;display:block;margin-top:auto;border:none;" allow="autoplay; encrypted-media" allowfullscreen></iframe>
     </div>
 
-    <!-- Right panel -->
+    <!-- Right panel — video fills full height -->
     <div class="right-panel">
-      <div class="media-grid" id="media-grid"></div>
+      <div id="yt-facade" style="position:relative;width:100%;height:100%;background:#111;cursor:pointer;overflow:hidden;">
+        <img id="yt-thumb" src="https://i.ytimg.com/vi/opUlCLyaEWI/maxresdefault.jpg" alt="I Miss Everyone" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity 0.2s;">
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
+          <div style="width:72px;height:72px;background:rgba(0,0,0,0.7);border-radius:50%;display:flex;align-items:center;justify-content:center;">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <iframe id="yt-iframe" style="display:none;position:absolute;inset:0;width:100%;height:100%;border:none;" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      </div>
     </div>
 
+  </div>
+
+  <!-- Collage below the fold -->
+  <div class="collage-section">
+    <div class="media-grid" id="media-grid"></div>
   </div>
 
   <!-- Lightbox -->
@@ -387,7 +400,7 @@
 
     // Collage layout
     const containerWidth = grid.offsetWidth;
-    const rowHeight = 160;
+    const rowHeight = 260;
     const itemsPerRow = 4;
     const rows = Math.ceil(media.length / itemsPerRow);
     const items2 = Array.from(grid.querySelectorAll('.grid-item'));
@@ -491,6 +504,18 @@
     }, { passive: true });
   </script>
 
+
+  <script>
+    // YouTube facade
+    document.getElementById('yt-facade').addEventListener('click', function() {
+      const iframe = document.getElementById('yt-iframe');
+      const thumb = document.getElementById('yt-thumb');
+      iframe.src = 'https://www.youtube.com/embed/opUlCLyaEWI?autoplay=1';
+      iframe.style.display = 'block';
+      thumb.style.display = 'none';
+      this.querySelector('div').style.display = 'none';
+    });
+  </script>
 
   <script>
     // Page transition

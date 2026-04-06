@@ -46,7 +46,7 @@
       inset: 0;
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
       display: none;
     }
 
@@ -75,11 +75,11 @@
       align-items: center;
       padding: 0 28px;
       font-family: system-ui, -apple-system, sans-serif;
-      font-size: 11px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
+      font-size: 42px;
       color: #c0bdb8;
       font-weight: 300;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
       pointer-events: none;
     }
 
@@ -126,12 +126,12 @@
     }
 
     .work-dropdown li {
-      line-height: 2.2;
+      line-height: 1.8;
     }
 
     .work-dropdown li a {
-      font-size: 10px;
-      letter-spacing: 0.18em;
+      font-size: 28px;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
       color: #c0bdb8;
       text-decoration: none;
@@ -147,10 +147,10 @@
       position: absolute;
       top: calc(100% + 16px);
       right: 0;
-      width: 260px;
+      width: 520px;
       text-align: right;
-      font-size: 10px;
-      letter-spacing: 0.18em;
+      font-size: 28px;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
       font-weight: 300;
       color: #c0bdb8;
@@ -174,7 +174,7 @@
       transform: translate(-50%, -50%);
       z-index: 1;
       pointer-events: none;
-      max-width: 1000px;
+      max-width: 1600px;
       height: auto;
       border: none;
       box-shadow: none;
@@ -253,7 +253,7 @@
           <li><a href="liquified-self-portrait.html">Liquified Self Portrait</a></li>
           <li><a href="dtfa-website.html">DTFA Website</a></li>
           <li><a href="suntina.html">Suntina</a></li>
-          <li><a href="archive.html">Archive</a></li>
+          <li><a href="archive.html">More</a></li>
         </ul>
       </div>
 <div class="nav-info" id="nav-info">
@@ -278,110 +278,110 @@
   <script>
     const TILES = [
       // I Miss Everyone — videos
-      { src: 'public/imisseveryone/imisseveryone1.mp4',  type: 'video', w: 90,  h: 63,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone2.mp4',  type: 'video', w: 66,  h: 84,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone3.mp4',  type: 'video', w: 98,  h: 60,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone10.mp4', type: 'video', w: 64,  h: 85,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone11.mp4', type: 'video', w: 90,  h: 59,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone12.mp4', type: 'video', w: 67,  h: 88,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone13.mp4', type: 'video', w: 99,  h: 63,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone1.mp4',  type: 'video', w: 202,  h: 63,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone2.mp4',  type: 'video', w: 148,  h: 84,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone3.mp4',  type: 'video', w: 220,  h: 60,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone10.mp4', type: 'video', w: 144,  h: 85,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone11.mp4', type: 'video', w: 202,  h: 59,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone12.mp4', type: 'video', w: 150,  h: 88,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone13.mp4', type: 'video', w: 222,  h: 63,  link: 'i-miss-everyone.html' },
       // I Miss Everyone — images
-      { src: 'public/imisseveryone/imisseveryone4.png',  type: 'image', w: 70,  h: 91,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone5.png',  type: 'image', w: 94,  h: 62,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone6.png',  type: 'image', w: 63,  h: 80,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone7.png',  type: 'image', w: 101, h: 64,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone8.png',  type: 'image', w: 62,  h: 82,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone9.png',  type: 'image', w: 97,  h: 60,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone14.png', type: 'image', w: 60,  h: 78,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone15.png', type: 'image', w: 104, h: 66,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone16.png', type: 'image', w: 66,  h: 87,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone17.png', type: 'image', w: 92,  h: 62,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone18.png', type: 'image', w: 68,  h: 90,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone19.png', type: 'image', w: 95,  h: 60,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone20.png', type: 'image', w: 63,  h: 81,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone21.png', type: 'image', w: 101, h: 64,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone22.png', type: 'image', w: 59,  h: 77,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone23.png', type: 'image', w: 98,  h: 62,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone24.png', type: 'image', w: 64,  h: 84,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone25.png', type: 'image', w: 94,  h: 59,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone26.png', type: 'image', w: 67,  h: 87,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone27.png', type: 'image', w: 97,  h: 63,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone28.png', type: 'image', w: 62,  h: 80,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone29.png', type: 'image', w: 102, h: 64,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone30.png', type: 'image', w: 66,  h: 85,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone32.png', type: 'image', w: 68,  h: 90,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone33.png', type: 'image', w: 95,  h: 62,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone34.png', type: 'image', w: 63,  h: 82,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone35.png', type: 'image', w: 99,  h: 63,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone36.png', type: 'image', w: 60,  h: 78,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone37.png', type: 'image', w: 98,  h: 60,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone38.png', type: 'image', w: 64,  h: 84,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone39.png', type: 'image', w: 92,  h: 59,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone40.jpg', type: 'image', w: 67,  h: 88,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone41.png', type: 'image', w: 91,  h: 63,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone42.png', type: 'image', w: 66,  h: 84,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone43.png', type: 'image', w: 98,  h: 60,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone44.png', type: 'image', w: 70,  h: 91,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone45.png', type: 'image', w: 94,  h: 62,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone46.png', type: 'image', w: 63,  h: 80,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone47.png', type: 'image', w: 101, h: 64,  link: 'i-miss-everyone.html' },
-      { src: 'public/imisseveryone/imisseveryone48.png', type: 'image', w: 62,  h: 82,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone4.png',  type: 'image', w: 158,  h: 91,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone5.png',  type: 'image', w: 212,  h: 62,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone6.png',  type: 'image', w: 141,  h: 80,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone7.png',  type: 'image', w: 228, h: 64,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone8.png',  type: 'image', w: 140,  h: 82,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone9.png',  type: 'image', w: 219,  h: 60,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone14.png', type: 'image', w: 135,  h: 78,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone15.png', type: 'image', w: 234, h: 66,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone16.png', type: 'image', w: 148,  h: 87,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone17.png', type: 'image', w: 207,  h: 62,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone18.png', type: 'image', w: 153,  h: 90,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone19.png', type: 'image', w: 213,  h: 60,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone20.png', type: 'image', w: 141,  h: 81,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone21.png', type: 'image', w: 228, h: 64,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone22.png', type: 'image', w: 132,  h: 77,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone23.png', type: 'image', w: 220,  h: 62,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone24.png', type: 'image', w: 144,  h: 84,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone25.png', type: 'image', w: 212,  h: 59,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone26.png', type: 'image', w: 150,  h: 87,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone27.png', type: 'image', w: 219,  h: 63,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone28.png', type: 'image', w: 140,  h: 80,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone29.png', type: 'image', w: 230, h: 64,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone30.png', type: 'image', w: 148,  h: 85,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone32.png', type: 'image', w: 153,  h: 90,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone33.png', type: 'image', w: 213,  h: 62,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone34.png', type: 'image', w: 141,  h: 82,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone35.png', type: 'image', w: 222,  h: 63,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone36.png', type: 'image', w: 135,  h: 78,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone37.png', type: 'image', w: 220,  h: 60,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone38.png', type: 'image', w: 144,  h: 84,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone39.png', type: 'image', w: 207,  h: 59,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone40.jpg', type: 'image', w: 150,  h: 88,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone41.png', type: 'image', w: 204,  h: 63,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone42.png', type: 'image', w: 148,  h: 84,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone43.png', type: 'image', w: 220,  h: 60,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone44.png', type: 'image', w: 158,  h: 91,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone45.png', type: 'image', w: 212,  h: 62,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone46.png', type: 'image', w: 141,  h: 80,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone47.png', type: 'image', w: 228, h: 64,  link: 'i-miss-everyone.html' },
+      { src: 'public/imisseveryone/imisseveryone48.png', type: 'image', w: 140,  h: 82,  link: 'i-miss-everyone.html' },
       // A Hair Between Us — images
-      { src: 'public/ahairbetweenus/ahairbetweenus1.png', type: 'image', w: 91,  h: 63,  link: 'a-hair-between-us.html' },
-      { src: 'public/ahairbetweenus/ahairbetweenus2.png', type: 'image', w: 64,  h: 84,  link: 'a-hair-between-us.html' },
-      { src: 'public/ahairbetweenus/ahairbetweenus3.png', type: 'image', w: 101, h: 62,  link: 'a-hair-between-us.html' },
-      { src: 'public/ahairbetweenus/ahairbetweenus4.png', type: 'image', w: 60,  h: 80,  link: 'a-hair-between-us.html' },
-      { src: 'public/ahairbetweenus/ahairbetweenus5.png', type: 'image', w: 97,  h: 64,  link: 'a-hair-between-us.html' },
-      { src: 'public/ahairbetweenus/ahairbetweenus6.png', type: 'image', w: 66,  h: 85,  link: 'a-hair-between-us.html' },
+      { src: 'public/ahairbetweenus/ahairbetweenus1.png', type: 'image', w: 204,  h: 63,  link: 'a-hair-between-us.html' },
+      { src: 'public/ahairbetweenus/ahairbetweenus2.png', type: 'image', w: 144,  h: 84,  link: 'a-hair-between-us.html' },
+      { src: 'public/ahairbetweenus/ahairbetweenus3.png', type: 'image', w: 228, h: 62,  link: 'a-hair-between-us.html' },
+      { src: 'public/ahairbetweenus/ahairbetweenus4.png', type: 'image', w: 135,  h: 80,  link: 'a-hair-between-us.html' },
+      { src: 'public/ahairbetweenus/ahairbetweenus5.png', type: 'image', w: 219,  h: 64,  link: 'a-hair-between-us.html' },
+      { src: 'public/ahairbetweenus/ahairbetweenus6.png', type: 'image', w: 148,  h: 85,  link: 'a-hair-between-us.html' },
       // Liquified Self Portrait — images
-      { src: 'public/liquified/liquified1.png', type: 'image', w: 91,  h: 63,  link: 'liquified-self-portrait.html' },
-      { src: 'public/liquified/liquified2.png', type: 'image', w: 64,  h: 84,  link: 'liquified-self-portrait.html' },
-      { src: 'public/liquified/liquified3.png', type: 'image', w: 101, h: 62,  link: 'liquified-self-portrait.html' },
-      { src: 'public/liquified/liquified4.jpg', type: 'image', w: 60,  h: 80,  link: 'liquified-self-portrait.html' },
-      { src: 'public/liquified/liquified5.jpg', type: 'image', w: 97,  h: 64,  link: 'liquified-self-portrait.html' },
+      { src: 'public/liquified/liquified1.png', type: 'image', w: 204,  h: 63,  link: 'liquified-self-portrait.html' },
+      { src: 'public/liquified/liquified2.png', type: 'image', w: 144,  h: 84,  link: 'liquified-self-portrait.html' },
+      { src: 'public/liquified/liquified3.png', type: 'image', w: 228, h: 62,  link: 'liquified-self-portrait.html' },
+      { src: 'public/liquified/liquified4.jpg', type: 'image', w: 135,  h: 80,  link: 'liquified-self-portrait.html' },
+      { src: 'public/liquified/liquified5.jpg', type: 'image', w: 219,  h: 64,  link: 'liquified-self-portrait.html' },
       // DTFA Website — videos
-      { src: 'public/DTFA/DTFA1.mp4', type: 'video', w: 91,  h: 63,  link: 'dtfa-website.html' },
-      { src: 'public/DTFA/DTFA2.mp4', type: 'video', w: 66,  h: 84,  link: 'dtfa-website.html' },
-      { src: 'public/DTFA/DTFA3.mp4', type: 'video', w: 98,  h: 60,  link: 'dtfa-website.html' },
+      { src: 'public/DTFA/DTFA1.mp4', type: 'video', w: 204,  h: 63,  link: 'dtfa-website.html' },
+      { src: 'public/DTFA/DTFA2.mp4', type: 'video', w: 148,  h: 84,  link: 'dtfa-website.html' },
+      { src: 'public/DTFA/DTFA3.mp4', type: 'video', w: 220,  h: 60,  link: 'dtfa-website.html' },
       // Suntina — images
-      { src: 'public/suntina/suntina1.gif',  type: 'image', w: 55,  h: 38,  link: 'suntina.html' },
-      { src: 'public/suntina/suntina2.png',  type: 'image', w: 40,  h: 52,  link: 'suntina.html' },
-      { src: 'public/suntina/suntina3.png',  type: 'image', w: 60,  h: 37,  link: 'suntina.html' },
-      { src: 'public/suntina/suntina4.gif',  type: 'image', w: 44,  h: 57,  link: 'suntina.html' },
-      { src: 'public/suntina/suntina5.png',  type: 'image', w: 58,  h: 38,  link: 'suntina.html' },
-      { src: 'public/suntina/suntina6.png',  type: 'image', w: 39,  h: 50,  link: 'suntina.html' },
-      { src: 'public/suntina/suntina7.png',  type: 'image', w: 62,  h: 40,  link: 'suntina.html' },
-      { src: 'public/suntina/suntina8.gif',  type: 'image', w: 38,  h: 51,  link: 'suntina.html' },
-      { src: 'public/suntina/suntina9.gif',  type: 'image', w: 59,  h: 37,  link: 'suntina.html' },
-      { src: 'public/suntina/suntina10.gif', type: 'image', w: 40,  h: 53,  link: 'suntina.html' },
-      { src: 'public/suntina/suntina11.gif', type: 'image', w: 55,  h: 36,  link: 'suntina.html' },
+      { src: 'public/suntina/suntina1.gif',  type: 'image', w: 123,  h: 38,  link: 'suntina.html' },
+      { src: 'public/suntina/suntina2.png',  type: 'image', w: 90,  h: 52,  link: 'suntina.html' },
+      { src: 'public/suntina/suntina3.png',  type: 'image', w: 135,  h: 37,  link: 'suntina.html' },
+      { src: 'public/suntina/suntina4.gif',  type: 'image', w: 99,  h: 57,  link: 'suntina.html' },
+      { src: 'public/suntina/suntina5.png',  type: 'image', w: 130,  h: 38,  link: 'suntina.html' },
+      { src: 'public/suntina/suntina6.png',  type: 'image', w: 87,  h: 50,  link: 'suntina.html' },
+      { src: 'public/suntina/suntina7.png',  type: 'image', w: 140,  h: 40,  link: 'suntina.html' },
+      { src: 'public/suntina/suntina8.gif',  type: 'image', w: 86,  h: 51,  link: 'suntina.html' },
+      { src: 'public/suntina/suntina9.gif',  type: 'image', w: 132,  h: 37,  link: 'suntina.html' },
+      { src: 'public/suntina/suntina10.gif', type: 'image', w: 90,  h: 53,  link: 'suntina.html' },
+      { src: 'public/suntina/suntina11.gif', type: 'image', w: 123,  h: 36,  link: 'suntina.html' },
       // Suntina — videos
-      { src: 'public/suntina/suntina12.mp4', type: 'video', w: 42,  h: 55,  link: 'suntina.html' },
-      { src: 'public/suntina/suntina13.mp4', type: 'video', w: 61,  h: 39,  link: 'suntina.html' },
+      { src: 'public/suntina/suntina12.mp4', type: 'video', w: 94,  h: 55,  link: 'suntina.html' },
+      { src: 'public/suntina/suntina13.mp4', type: 'video', w: 138,  h: 39,  link: 'suntina.html' },
       // Archive — images
-      { src: 'public/archive/archive1.gif',  type: 'image', w: 55,  h: 38,  link: 'archive.html' },
-      { src: 'public/archive/archive2.jpg',  type: 'image', w: 41,  h: 52,  link: 'archive.html' },
-      { src: 'public/archive/archive3.png',  type: 'image', w: 60,  h: 37,  link: 'archive.html' },
-      { src: 'public/archive/archive4.png',  type: 'image', w: 44,  h: 57,  link: 'archive.html' },
-      { src: 'public/archive/archive5.gif',  type: 'image', w: 58,  h: 38,  link: 'archive.html' },
-      { src: 'public/archive/archive6.png',  type: 'image', w: 39,  h: 50,  link: 'archive.html' },
-      { src: 'public/archive/archive7.png',  type: 'image', w: 62,  h: 40,  link: 'archive.html' },
-      { src: 'public/archive/archive8.gif',  type: 'image', w: 38,  h: 51,  link: 'archive.html' },
-      { src: 'public/archive/archive9.png',  type: 'image', w: 59,  h: 37,  link: 'archive.html' },
-      { src: 'public/archive/archive10.png', type: 'image', w: 40,  h: 53,  link: 'archive.html' },
-      { src: 'public/archive/archive11.gif', type: 'image', w: 55,  h: 36,  link: 'archive.html' },
-      { src: 'public/archive/archive12.png', type: 'image', w: 42,  h: 55,  link: 'archive.html' },
-      { src: 'public/archive/archive13.png', type: 'image', w: 61,  h: 39,  link: 'archive.html' },
-      { src: 'public/archive/archive14.png', type: 'image', w: 37,  h: 49,  link: 'archive.html' },
-      { src: 'public/archive/archive15.png', type: 'image', w: 64,  h: 41,  link: 'archive.html' },
-      { src: 'public/archive/archive16.png', type: 'image', w: 41,  h: 54,  link: 'archive.html' },
-      { src: 'public/archive/archive17.png', type: 'image', w: 57,  h: 38,  link: 'archive.html' },
-      { src: 'public/archive/archive18.png', type: 'image', w: 43,  h: 56,  link: 'archive.html' },
-      { src: 'public/archive/archive19.png', type: 'image', w: 59,  h: 37,  link: 'archive.html' },
-      { src: 'public/archive/archive20.png', type: 'image', w: 39,  h: 51,  link: 'archive.html' },
-      { src: 'public/archive/archive21.png', type: 'image', w: 62,  h: 40,  link: 'archive.html' },
-      { src: 'public/archive/archive22.gif', type: 'image', w: 36,  h: 48,  link: 'archive.html' },
-      { src: 'public/archive/archive23.png', type: 'image', w: 60,  h: 38,  link: 'archive.html' },
+      { src: 'public/archive/archive1.gif',  type: 'image', w: 123,  h: 38,  link: 'archive.html' },
+      { src: 'public/archive/archive2.jpg',  type: 'image', w: 93,  h: 52,  link: 'archive.html' },
+      { src: 'public/archive/archive3.png',  type: 'image', w: 135,  h: 37,  link: 'archive.html' },
+      { src: 'public/archive/archive4.png',  type: 'image', w: 99,  h: 57,  link: 'archive.html' },
+      { src: 'public/archive/archive5.gif',  type: 'image', w: 130,  h: 38,  link: 'archive.html' },
+      { src: 'public/archive/archive6.png',  type: 'image', w: 87,  h: 50,  link: 'archive.html' },
+      { src: 'public/archive/archive7.png',  type: 'image', w: 140,  h: 40,  link: 'archive.html' },
+      { src: 'public/archive/archive8.gif',  type: 'image', w: 86,  h: 51,  link: 'archive.html' },
+      { src: 'public/archive/archive9.png',  type: 'image', w: 132,  h: 37,  link: 'archive.html' },
+      { src: 'public/archive/archive10.png', type: 'image', w: 90,  h: 53,  link: 'archive.html' },
+      { src: 'public/archive/archive11.gif', type: 'image', w: 123,  h: 36,  link: 'archive.html' },
+      { src: 'public/archive/archive12.png', type: 'image', w: 94,  h: 55,  link: 'archive.html' },
+      { src: 'public/archive/archive13.png', type: 'image', w: 138,  h: 39,  link: 'archive.html' },
+      { src: 'public/archive/archive14.png', type: 'image', w: 84,  h: 49,  link: 'archive.html' },
+      { src: 'public/archive/archive15.png', type: 'image', w: 144,  h: 41,  link: 'archive.html' },
+      { src: 'public/archive/archive16.png', type: 'image', w: 93,  h: 54,  link: 'archive.html' },
+      { src: 'public/archive/archive17.png', type: 'image', w: 129,  h: 38,  link: 'archive.html' },
+      { src: 'public/archive/archive18.png', type: 'image', w: 96,  h: 56,  link: 'archive.html' },
+      { src: 'public/archive/archive19.png', type: 'image', w: 132,  h: 37,  link: 'archive.html' },
+      { src: 'public/archive/archive20.png', type: 'image', w: 87,  h: 51,  link: 'archive.html' },
+      { src: 'public/archive/archive21.png', type: 'image', w: 140,  h: 40,  link: 'archive.html' },
+      { src: 'public/archive/archive22.gif', type: 'image', w: 81,  h: 48,  link: 'archive.html' },
+      { src: 'public/archive/archive23.png', type: 'image', w: 135,  h: 38,  link: 'archive.html' },
     ];
 
     // Shuffle tiles
@@ -547,7 +547,9 @@
 
     navWork.querySelector('a').addEventListener('click', (e) => {
       e.preventDefault();
-      workDropdown.classList.toggle('open');
+      const opening = !workDropdown.classList.contains('open');
+      infoDropdown.classList.remove('open');
+      workDropdown.classList.toggle('open', opening);
     });
     workDropdown.addEventListener('click', (e) => e.stopPropagation());
 
@@ -555,7 +557,9 @@
     const infoDropdown = document.getElementById('info-dropdown');
     navInfo.querySelector('a').addEventListener('click', (e) => {
       e.preventDefault();
-      infoDropdown.classList.toggle('open');
+      const opening = !infoDropdown.classList.contains('open');
+      workDropdown.classList.remove('open');
+      infoDropdown.classList.toggle('open', opening);
     });
     infoDropdown.addEventListener('click', (e) => e.stopPropagation());
 

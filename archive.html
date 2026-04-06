@@ -11,22 +11,23 @@
       font-family: system-ui, -apple-system, sans-serif;
       background: #000;
       color: #c0bdb8;
-      height: 100vh;
-      overflow: hidden;
+      overflow-y: auto;
     }
 
     /* ── Two-panel layout ── */
     .layout {
       display: flex;
-      height: 100vh;
+      align-items: flex-start;
     }
 
-    /* Left — fixed info panel */
+    /* Left — sticky info panel */
     .left-panel {
       flex: 0 0 42%;
+      position: sticky;
+      top: 0;
       height: 100vh;
       padding: 28px;
-      padding-top: 160px;
+      padding-top: 320px;
       display: flex;
       flex-direction: column;
       border-right: none;
@@ -36,27 +37,27 @@
       position: fixed;
       top: 28px;
       left: 28px;
-      font-size: 11px;
+      font-size: 42px;
       color: #c0bdb8;
       text-decoration: none;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
       transition: color 0.2s;
       display: inline-block;
       font-weight: 300;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
       z-index: 200;
     }
     .back-arrow:hover { color: #fff; }
 
     .project-nav {
       position: fixed;
-      left: calc(42% - 80px);
+      left: calc(42% - 120px);
       top: 28px;
       z-index: 200;
       display: flex;
       flex-direction: row;
       gap: 24px;
-      font-size: 26px;
+      font-size: 42px;
       font-weight: 300;
     }
 
@@ -69,7 +70,7 @@
     .project-nav a:hover { color: #fff; }
 
     .project-title {
-      font-size: 17px;
+      font-size: 40px;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       font-weight: 300;
@@ -79,13 +80,13 @@
     }
 
     .project-blurb {
-      font-size: 13px;
-      letter-spacing: 0.1em;
-      line-height: 1.47;
-      font-weight: 300;
+      font-size: 28px;
+      letter-spacing: 0.03em;
+      line-height: 1.6;
+      font-weight: 600;
       color: #999;
-      margin-bottom: 40px;
-      max-width: 360px;
+      margin-bottom: 28px;
+      max-width: 600px;
     }
 
     .project-meta {
@@ -100,22 +101,30 @@
     /* Right — scrollable grid */
     .right-panel {
       flex: 1;
-      height: 100vh;
-      overflow-y: auto;
       padding: 28px 28px 80px;
     }
 
-    .right-panel::-webkit-scrollbar { display: none; }
-
     .media-grid {
-      position: relative;
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+      align-items: flex-start;
       width: 100%;
     }
 
+    .media-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
     .grid-item {
-      position: absolute;
+      display: block;
+      width: 100%;
       cursor: pointer;
       overflow: hidden;
+      position: relative;
     }
 
     .grid-item img,
@@ -270,11 +279,6 @@
         Ideas, past creations, visual bubbles.
       </p>
 
-      <div class="project-meta">
-        <div>Category: All</div>
-        <div>Medium: Video + Graphic Design + Collage + Image</div>
-        <div>Year: Forever</div>
-      </div>
     </div>
 
     <!-- Right panel -->
@@ -338,41 +342,66 @@
       const div = document.createElement('div');
       div.className = 'grid-item';
       div.dataset.index = i;
-      const img = document.createElement('img');
-      img.src = item.src;
-      img.alt = '';
-      div.appendChild(img);
+      if (item.src.endsWith('.mp4')) {
+        const video = document.createElement('video');
+        video.autoplay = true;
+        video.loop = true;
+        video.muted = true;
+        video.playsInline = true;
+        video.style.width = '100%';
+        video.style.display = 'block';
+        video.style.cursor = 'pointer';
+        const source = document.createElement('source');
+        source.src = item.src;
+        source.type = 'video/mp4';
+        video.appendChild(source);
+        video.addEventListener('click', () => {
+          video.muted = false;
+          video.controls = true;
+        });
+        div.appendChild(video);
+      } else {
+        const img = document.createElement('img');
+        img.src = item.src;
+        img.alt = '';
+        div.appendChild(img);
+      }
       grid.appendChild(div);
     });
 
-    // Collage layout
-    const containerWidth = grid.offsetWidth;
-    const rowHeight = 160;
-    const itemsPerRow = 4;
-    const rows = Math.ceil(media.length / itemsPerRow);
-    const items2 = Array.from(grid.querySelectorAll('.grid-item'));
-    items2.forEach((el, i) => {
-      const col = i % itemsPerRow;
-      const row = Math.floor(i / itemsPerRow);
-      const colWidth = containerWidth / itemsPerRow;
-      const width = media[i].small ? colWidth * 0.35 : colWidth * (0.7 + Math.random() * 0.35);
-      const baseX = col * colWidth;
-      const offsetX = (Math.random() - 0.5) * colWidth * 0.4;
-      const baseY = row * rowHeight;
-      const offsetY = (Math.random() - 0.5) * rowHeight * 0.5;
-      const left = Math.min(Math.max(0, baseX + offsetX), containerWidth - width);
-      el.style.left = left + 'px';
-      el.style.top = Math.max(0, baseY + offsetY) + 'px';
-      el.style.width = width + 'px';
-      el.style.transform = '';
-      el.style.zIndex = Math.floor(Math.random() * 15);
+    // Build 3 column divs
+    const colDivs = [0, 1, 2].map(() => {
+      const col = document.createElement('div');
+      col.className = 'media-col';
+      grid.appendChild(col);
+      return col;
     });
-    grid.style.height = (rows * rowHeight + 300) + 'px';
+
+    const items2 = Array.from(grid.querySelectorAll('.grid-item'));
+
+    // Wait for all images to load, then distribute by shortest column
+    const imgs = items2.map(el => el.querySelector('img')).filter(Boolean);
+    Promise.all(imgs.map(img => img.complete
+      ? Promise.resolve()
+      : new Promise(r => { img.onload = r; img.onerror = r; })
+    )).then(() => {
+      const colHeights = [0, 0, 0];
+      items2.forEach(el => {
+        const shortest = colHeights.indexOf(Math.min(...colHeights));
+        colDivs[shortest].appendChild(el);
+        colHeights[shortest] += el.offsetHeight + 20;
+        const nudgeX = (Math.random() - 0.5) * 14;
+        const nudgeY = (Math.random() - 0.5) * 10;
+        el.style.transform = `translate(${nudgeX}px, ${nudgeY}px)`;
+      });
+    });
 
     // Build media list from grid items
     const items = Array.from(document.querySelectorAll('.grid-item'));
     const mediaList = items.map(el => {
       const img = el.querySelector('img');
+      const vid = el.querySelector('video');
+      if (vid) return { type: 'video', src: vid.querySelector('source').src };
       if (img) return { type: 'image', src: img.src };
     });
 
@@ -395,15 +424,30 @@
     function renderLightbox() {
       lbMedia.innerHTML = '';
       const item = mediaList[current];
-      const img = document.createElement('img');
-      img.src = item.src;
-      if (item.src.includes('archive17')) {
-        img.style.minWidth = '0';
-        img.style.minHeight = '0';
-        img.style.maxWidth = '30vw';
-        img.style.maxHeight = '40vh';
+      if (item.type === 'video') {
+        const video = document.createElement('video');
+        video.controls = true;
+        video.autoplay = true;
+        video.loop = true;
+        video.playsInline = true;
+        video.style.maxWidth = '90vw';
+        video.style.maxHeight = '80vh';
+        const source = document.createElement('source');
+        source.src = item.src;
+        source.type = 'video/mp4';
+        video.appendChild(source);
+        lbMedia.appendChild(video);
+      } else {
+        const img = document.createElement('img');
+        img.src = item.src;
+        if (item.src.includes('archive17')) {
+          img.style.minWidth = '0';
+          img.style.minHeight = '0';
+          img.style.maxWidth = '30vw';
+          img.style.maxHeight = '40vh';
+        }
+        lbMedia.appendChild(img);
       }
-      lbMedia.appendChild(img);
       lbCounter.textContent = `${current + 1} / ${mediaList.length}`;
     }
 
