@@ -233,6 +233,44 @@
       #yt-facade { height: 56vw !important; }
     }
 
+    /* ── Footer ── */
+    .site-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 80px 28px 60px;
+
+      gap: 60px;
+    }
+    .footer-col {
+      display: flex;
+      flex-direction: column;
+      font-size: 14px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 300;
+      color: #c0bdb8;
+      line-height: 1.8;
+    }
+    .footer-label {
+      color: #444;
+      margin-bottom: 8px;
+    }
+    .footer-col a {
+      color: #c0bdb8;
+      text-decoration: none;
+    }
+    .footer-col a:hover { color: #fff; }
+    .footer-info {
+      display: block;
+      text-align: right;
+      max-width: 320px;
+    }
+    @media (max-width: 768px) {
+      .site-footer { flex-direction: column; gap: 40px; padding: 60px 20px 40px; }
+      .footer-info { text-align: left; }
+    }
+
     /* ── Page transition overlay ── */
     @keyframes _overlayFadeIn {
       from { opacity: 1; }
@@ -440,6 +478,31 @@
       this.querySelector('div').style.display = 'none';
     });
   </script>
+
+  <footer class="site-footer">
+    <div class="footer-col">
+      <span class="footer-label">Work</span>
+      <a href="i-miss-everyone.html">I Miss Everyone</a>
+      <a href="a-hair-between-us.html">A Hair Between Us</a>
+      <a href="liquified-self-portrait.html">Liquified Self Portrait</a>
+      <a href="dtfa-website.html">DTFA Website</a>
+      <a href="suntina.html">Suntina</a>
+      <a href="archive.html">More</a>
+    </div>
+    <div class="footer-col footer-info">
+      SUN AROCH IS A <b>CREATIVE TECHNOLOGIST</b><br>
+      <b>DESIGNER</b><br>
+      <b>PROGRAMMER</b><br>
+      <b>MUSICIAN</b><br>
+      <b>ARTIST</b><br>
+      FROM NYC<br><br>
+      BACHELORS: COMPUTER SCIENCE @ BARNARD<br>
+      MASTER: APPLIED AI FOR ART AND DESIGN @ ELISAVA (CURRENT)<br><br>
+      EMAIL: AROCHSUN@GMAIL.COM<br>
+      <a href="https://www.instagram.com/sunaroch/" target="_blank">INSTAGRAM</a><br>
+      <a href="https://www.linkedin.com/in/sunaroch" target="_blank">LINKEDIN</a>
+    </div>
+  </footer>
 
   <script>
     // Page transition
