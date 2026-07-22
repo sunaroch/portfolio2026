@@ -167,6 +167,10 @@
       transform: translateY(0);
     }
 
+    .info-dropdown b {
+      font-weight: 600;
+    }
+
     #logo {
       position: fixed;
       top: 50%;
@@ -248,6 +252,7 @@
       <div class="nav-work" id="nav-work">
         <a href="#" id="work-trigger">Work</a>
         <ul class="work-dropdown" id="work-dropdown">
+          <li><a href="complicator.html"><b>Complicator</b></a></li>
           <li><a href="i-miss-everyone.html">I Miss Everyone</a></li>
           <li><a href="a-hair-between-us.html">A Hair Between Us</a></li>
           <li><a href="liquified-self-portrait.html">Liquified Self Portrait</a></li>
@@ -259,17 +264,17 @@
 <div class="nav-info" id="nav-info">
         <a href="#">Info</a>
         <div class="info-dropdown" id="info-dropdown">
-          SUN AROCH IS A <b>CREATIVE TECHNOLOGIST</b><br>
+          <b>SUN AROCH</b> IS A <b>CREATIVE TECHNOLOGIST</b><br>
           <b>DESIGNER</b><br>
           <b>PROGRAMMER</b><br>
           <b>MUSICIAN</b><br>
           <b>ARTIST</b><br>
           FROM NYC<br><br>
-          BACHELORS: COMPUTER SCIENCE @ BARNARD<br>
-          MASTER: APPLIED AI FOR ART AND DESIGN @ ELISAVA (current)<br><br>
-          EMAIL: AROCHSUN@GMAIL.COM<br>
-          <a href="https://www.instagram.com/sunaroch/" target="_blank" style="color:inherit;text-decoration:none;border-bottom:1px solid #444;">INSTAGRAM</a><br>
-          <a href="https://www.linkedin.com/in/sunaroch" target="_blank" style="color:inherit;text-decoration:none;border-bottom:1px solid #444;">LINKEDIN</a>
+          <b>BACHELORS</b>: COMPUTER SCIENCE @ BARNARD<br>
+          <b>MASTER</b>: APPLIED AI FOR ART AND DESIGN @ ELISAVA (current)<br><br>
+          <b>EMAIL</b>: AROCHSUN@GMAIL.COM<br>
+          <a href="https://www.instagram.com/sunaroch/" target="_blank" style="color:inherit;text-decoration:none;border-bottom:1px solid #444;"><b>INSTAGRAM</b></a><br>
+          <a href="https://www.linkedin.com/in/sunaroch" target="_blank" style="color:inherit;text-decoration:none;border-bottom:1px solid #444;"><b>LINKEDIN</b></a>
         </div>
       </div>
     </div>
@@ -277,6 +282,17 @@
 
   <script>
     const TILES = [
+      // Complicator — thumbs in helix, full-res on hover
+      { src: 'public/complicator/thumbs/sunaroch_complicator_installation1.jpg', preview: 'public/complicator/sunaroch_complicator_installation1.png', type: 'image', w: 110, h: 73, link: 'complicator.html' },
+      { src: 'public/complicator/thumbs/sunaroch_complicator_installation2.jpg', preview: 'public/complicator/sunaroch_complicator_installation2.png', type: 'image', w: 78,  h: 90, link: 'complicator.html' },
+      { src: 'public/complicator/thumbs/sunaroch_complicator_installation3.jpg', preview: 'public/complicator/sunaroch_complicator_installation3.png', type: 'image', w: 112, h: 66, link: 'complicator.html' },
+      { src: 'public/complicator/thumbs/sunaroch_complicator_installation4.jpg', preview: 'public/complicator/sunaroch_complicator_installation4.jpg', type: 'image', w: 74,  h: 86, link: 'complicator.html' },
+      { src: 'public/complicator/thumbs/sunaroch_complicator_book1.gif',         preview: 'public/complicator/sunaroch_complicator_book1.gif', type: 'image', w: 106, h: 62, link: 'complicator.html' },
+      { src: 'public/complicator/thumbs/sunaroch_complicator_book2.jpg',         preview: 'public/complicator/sunaroch_complicator_book2.jpg', type: 'image', w: 72,  h: 84, link: 'complicator.html' },
+      { src: 'public/complicator/thumbs/sunaroch_complicator_book4.jpg',         preview: 'public/complicator/sunaroch_complicator_book4.jpg', type: 'image', w: 108, h: 63, link: 'complicator.html' },
+      { src: 'public/complicator/thumbs/sunaroch_complicator_book5.gif',         preview: 'public/complicator/sunaroch_complicator_book5.gif', type: 'image', w: 70,  h: 82, link: 'complicator.html' },
+      { src: 'public/complicator/thumbs/sunaroch_complicator_book8.gif',         preview: 'public/complicator/sunaroch_complicator_book8.gif', type: 'image', w: 110, h: 60, link: 'complicator.html' },
+      { src: 'public/complicator/thumbs/sunaroch_complicator_book9.gif',         preview: 'public/complicator/sunaroch_complicator_book9.gif', type: 'image', w: 76,  h: 88, link: 'complicator.html' },
       // I Miss Everyone — videos
       { src: 'public/imisseveryone/imisseveryone1.mp4',  type: 'video', w: 101,  h: 63,  link: 'i-miss-everyone.html' },
       { src: 'public/imisseveryone/imisseveryone2.mp4',  type: 'video', w: 74,  h: 84,  link: 'i-miss-everyone.html' },
@@ -507,7 +523,7 @@
       el.addEventListener('mouseenter', () => {
         if (tile.type === 'image') {
           bgVideo.style.display = 'none';
-          bgImg.src = tile.src;
+          bgImg.src = tile.preview || tile.src;
           bgImg.style.display = 'block';
         } else {
           bgImg.style.display = 'none';

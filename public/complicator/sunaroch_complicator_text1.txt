@@ -1,0 +1,23 @@
+ENGLISH:
+Complicator
+What the Machine Sees vs. What the Human Remembers
+
+We are used to browsing archives by time, file type, and search. Maybe we already know how to find what we are looking for. But what if we changed that ideology? What if potential connections come from complications or intersections of unrelated decisions. Complicator is an approach that redefines AI for creative use, a chance to discover new perspectives from the visual media we already have. Through programming experiments which organize images perceptually, new combinations are created allowing for a more meaningful collaboration with the machine. A collage of sorts. A combination of combinations. Each controlled by a human.
+
+
+Sun Aroch is a creative technologist and designer
+from NYC. Coming from a Bachelors in computer science and a
+background in music and art, she aims to understand how the creative world
+will change with AI and how to develop tools that are actually reflective of
+the creative experience, where ideas and meaning are still intentionally
+in the hands of a human.
+
+
+SPANISH:
+Complicator
+Lo que la máquina ve frente a lo que el humano recuerda
+
+Estamos acostumbrados a explorar archivos por fecha, tipo de archivo y búsqueda. Quizás ya sabemos cómo encontrar lo que buscamos. Pero ¿y si cambiáramos esa lógica? ¿Y si las conexiones surgieran de las complicaciones o de las intersecciones entre decisiones sin relación aparente? Complicator es un enfoque que redefine la IA para el uso creativo, una oportunidad para descubrir nuevas perspectivas a partir del material visual que ya tenemos. Mediante experimentos de programación que organizan las imágenes de forma perceptual, se crean nuevas combinaciones que permiten una colaboración más significativa con la máquina. Una especie de collage. Una combinación de combinaciones. Cada una controlada por un humano.
+
+
+Sun Aroch es una tecnóloga creativa y diseñadora de Nueva York. Con una licenciatura en Informática y una formación en música y arte, busca entender cómo cambiará el mundo creativo con la IA y cómo desarrollar herramientas que reflejen de verdad la experiencia creativa, donde las ideas y el significado sigan estando intencionadamente en manos de un humano.

@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complicator — Sun Aroch</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #000;
+      color: #c0bdb8;
+      overflow-y: auto;
+    }
+
+    .layout {
+      display: flex;
+      height: 100vh;
+    }
+
+    .left-panel {
+      flex: 0 0 42%;
+      height: 100vh;
+      padding: 28px;
+      padding-top: 260px;
+      display: flex;
+      flex-direction: column;
+      border-right: none;
+    }
+
+    .back-arrow {
+      position: fixed;
+      top: 28px;
+      left: 28px;
+      font-size: 21px;
+      color: #c0bdb8;
+      text-decoration: none;
+      transition: color 0.2s;
+      display: inline-block;
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      z-index: 200;
+    }
+    .back-arrow:hover { color: #fff; }
+
+    .project-nav {
+      position: fixed;
+      left: calc(42% - 120px);
+      top: 28px;
+      z-index: 200;
+      display: flex;
+      flex-direction: row;
+      gap: 24px;
+      font-size: 21px;
+      font-weight: 300;
+    }
+
+    .project-nav a {
+      color: #c0bdb8;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .project-nav a:hover { color: #fff; }
+
+    .project-title {
+      font-size: 20px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 300;
+      color: #c0bdb8;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+    .project-title b {
+      font-weight: 600;
+    }
+
+    .project-subtitle {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-weight: 300;
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+
+    .project-blurb {
+      font-size: 14px;
+      letter-spacing: 0.03em;
+      line-height: 1.6;
+      font-weight: 600;
+      color: #999;
+      margin-bottom: 28px;
+      max-width: 450px;
+    }
+
+    .right-panel {
+      flex: 1;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .right-panel img.hero {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* ── Content sections ── */
+    .content-section {
+      width: 100%;
+      padding: 48px 28px 8px;
+    }
+
+    .section-label {
+      font-size: 13px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-weight: 300;
+      color: #c0bdb8;
+      margin-bottom: 14px;
+    }
+
+    .section-intro {
+      font-size: 14px;
+      letter-spacing: 0.03em;
+      line-height: 1.6;
+      font-weight: 600;
+      color: #999;
+      max-width: 560px;
+      margin-bottom: 28px;
+    }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px 36px;
+      margin-bottom: 24px;
+      max-width: 1100px;
+    }
+
+    .tool-item {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .tool-name {
+      font-size: 14px;
+      letter-spacing: 0.06em;
+      font-weight: 300;
+      color: #c0bdb8;
+    }
+
+    .tool-desc {
+      font-size: 14px;
+      letter-spacing: 0.03em;
+      line-height: 1.6;
+      font-weight: 600;
+      color: #999;
+    }
+
+    .section-note {
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 300;
+      color: #555;
+      line-height: 1.8;
+      margin-bottom: 8px;
+    }
+
+    .tools-marquee {
+      width: 100%;
+      margin: 0 0 40px;
+      overflow: hidden;
+      mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent);
+    }
+
+    .tools-marquee-track {
+      display: flex;
+      width: max-content;
+      gap: 16px;
+      animation: tools-marquee 40s linear infinite;
+    }
+
+    .tools-marquee-track:hover {
+      animation-play-state: paused;
+    }
+
+    .tools-marquee-track img {
+      height: 280px;
+      width: auto;
+      display: block;
+      flex-shrink: 0;
+      cursor: pointer;
+      transition: opacity 0.25s ease;
+    }
+
+    .tools-marquee-track img:hover {
+      opacity: 0.8;
+    }
+
+    @keyframes tools-marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    .archives-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px 36px;
+      max-width: 1100px;
+    }
+
+    .archive-item {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .archive-name {
+      font-size: 14px;
+      letter-spacing: 0.06em;
+      font-weight: 300;
+      color: #c0bdb8;
+    }
+
+    .archive-desc {
+      font-size: 14px;
+      letter-spacing: 0.03em;
+      line-height: 1.6;
+      font-weight: 600;
+      color: #999;
+    }
+
+    /* ── Collage ── */
+    .collage-section {
+      width: 100%;
+      padding: 48px 28px 16px;
+    }
+
+    .collage-label {
+      font-size: 13px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-weight: 300;
+      color: #c0bdb8;
+      margin-bottom: 14px;
+    }
+
+    .collage-intro {
+      font-size: 14px;
+      letter-spacing: 0.03em;
+      line-height: 1.6;
+      font-weight: 600;
+      color: #999;
+      max-width: 560px;
+      margin-bottom: 28px;
+    }
+
+    .media-grid {
+      position: relative;
+      width: 100%;
+    }
+
+    .grid-item {
+      position: absolute;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .grid-item img,
+    .grid-item video {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: opacity 0.25s ease;
+    }
+
+    .grid-item:hover img,
+    .grid-item:hover video {
+      opacity: 0.75;
+    }
+
+    #lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.95);
+      z-index: 500;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #lightbox.open { display: flex; }
+
+    #lb-media {
+      max-width: 80vw;
+      max-height: 85vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #lb-media img,
+    #lb-media video {
+      max-width: 80vw;
+      max-height: 85vh;
+      object-fit: contain;
+      display: block;
+    }
+
+    .lb-arrow {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #555;
+      font-size: 12px;
+      cursor: pointer;
+      padding: 20px;
+      transition: color 0.2s;
+      z-index: 501;
+      letter-spacing: 0;
+    }
+    .lb-arrow:hover { color: #fff; }
+    #lb-prev { left: 20px; }
+    #lb-next { right: 20px; }
+
+    #lb-close {
+      position: fixed;
+      top: 24px;
+      right: 28px;
+      background: none;
+      border: none;
+      color: #555;
+      font-size: 10px;
+      cursor: pointer;
+      padding: 8px;
+      transition: color 0.2s;
+      z-index: 501;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    #lb-close:hover { color: #fff; }
+
+    #lb-counter {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 5px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #444;
+    }
+
+    /* ── Footer ── */
+    .site-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 56px 28px 60px;
+      gap: 60px;
+    }
+    .footer-col {
+      display: flex;
+      flex-direction: column;
+      font-size: 14px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 300;
+      color: #c0bdb8;
+      line-height: 1.8;
+    }
+    .footer-label {
+      color: #444;
+      margin-bottom: 8px;
+    }
+    .footer-col a {
+      color: #c0bdb8;
+      text-decoration: none;
+    }
+    .footer-col a:hover { color: #fff; }
+    .footer-col b {
+      font-weight: 600;
+    }
+    .footer-info {
+      display: block;
+      text-align: right;
+      max-width: 320px;
+    }
+
+    @media (max-width: 900px) {
+      .tools-grid,
+      .archives-row {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 28px 24px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body { overflow: auto; height: auto; }
+      .layout { flex-direction: column; height: auto; }
+      .left-panel {
+        flex: none;
+        width: 100%;
+        height: auto;
+        border-right: none;
+        padding: 20px;
+        padding-top: 100px;
+        padding-bottom: 28px;
+      }
+      .right-panel {
+        width: 100%;
+        height: auto;
+        overflow: hidden;
+        min-height: 0;
+      }
+      .right-panel img.hero {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+      }
+      .project-nav {
+        position: fixed;
+        top: 24px;
+        right: 20px;
+        left: auto;
+        bottom: auto;
+        font-size: 28px;
+        gap: 24px;
+        background: none;
+        padding: 0;
+        border-radius: 0;
+      }
+      .back-arrow {
+        top: 24px;
+        left: 20px;
+        font-size: 28px;
+      }
+      .project-title {
+        font-size: 18px;
+        margin-bottom: 10px;
+      }
+      .project-subtitle {
+        font-size: 10px;
+        letter-spacing: 0.12em;
+        max-width: 100%;
+        margin-bottom: 16px;
+      }
+      .project-blurb {
+        font-size: 14px;
+        max-width: 100%;
+        margin-bottom: 0;
+      }
+      .content-section,
+      .collage-section {
+        padding: 36px 20px 8px;
+      }
+      .section-intro,
+      .collage-intro {
+        max-width: 100%;
+        margin-bottom: 24px;
+      }
+      .tools-grid,
+      .archives-row {
+        grid-template-columns: 1fr;
+        gap: 22px;
+        margin-bottom: 20px;
+      }
+      .section-note {
+        font-size: 11px;
+        letter-spacing: 0.08em;
+      }
+      .tools-marquee-track img {
+        height: 160px;
+      }
+      .tools-marquee-track {
+        gap: 12px;
+        animation-duration: 28s;
+      }
+      .lb-arrow { display: none !important; }
+      #lb-media img,
+      #lb-media video {
+        max-width: 92vw;
+        max-height: 80vh;
+      }
+      .site-footer {
+        flex-direction: column;
+        gap: 40px;
+        padding: 48px 20px 40px;
+      }
+      .footer-info { text-align: left; }
+    }
+
+    /* ── Page transition overlay ── */
+    @keyframes _overlayFadeIn {
+      from { opacity: 1; }
+      to   { opacity: 0; }
+    }
+    #page-overlay {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 9999;
+      pointer-events: none;
+      animation: _overlayFadeIn 0.6s ease forwards;
+    }
+  </style>
+</head>
+<body>
+  <div id="page-overlay"></div>
+
+  <div class="layout">
+
+    <!-- Left panel -->
+    <div class="left-panel">
+      <a href="index.html" class="back-arrow">Sun Aroch</a>
+
+    <nav class="project-nav">
+      <a href="archive.html">←</a>
+      <a href="i-miss-everyone.html">→</a>
+    </nav>
+
+      <div class="project-title"><b>Complicator</b></div>
+      <div class="project-subtitle">What the Machine Sees vs. What the Human Remembers</div>
+
+      <p class="project-blurb">
+        We are used to browsing archives by time, file type, and search. But what if potential connections come from complications or intersections of unrelated decisions? Complicator redefines AI for creative use, a chance to discover new perspectives from the visual media we already have. The machine sorts, you decide what it means. A collage of sorts. A combination of combinations. Each controlled by a human.
+      </p>
+
+    </div>
+
+    <!-- Right panel: installation hero -->
+    <div class="right-panel">
+      <img class="hero" src="public/complicator/sunaroch_complicator_installation4.jpg" alt="Complicator: An Echo of This Room installation">
+    </div>
+
+  </div>
+
+  <!-- Installation -->
+  <div class="collage-section">
+    <h2 class="collage-label">An Echo of This Room</h2>
+    <p class="collage-intro">
+      Complicator takes physical form in a live installation. A webcam, a Raspberry Pi, and a thermal printer turn everyone who walks through the space into source material. Each face is added to the archive and used as a query at once, so every new composite is built from the faces that came before. A collective self-portrait of a room that no longer exists.
+    </p>
+    <div class="media-grid" id="installation-grid"></div>
+  </div>
+
+  <!-- Tools -->
+  <div class="content-section">
+    <h2 class="section-label">The Tools</h2>
+    <p class="section-intro">
+      Six experiments that reorganize image archives. They recycle what you already have. The machine measures, matches, and organizes. You decide what it means.
+    </p>
+
+    <div class="tools-marquee" id="tools-marquee">
+      <div class="tools-marquee-track" id="tools-marquee-track"></div>
+    </div>
+
+    <div class="tools-grid">
+      <div class="tool-item">
+        <div class="tool-name">gridMatcher</div>
+        <p class="tool-desc">Tonal grid matching from pure image statistics. Finds images that share a texture, tone, or structure.</p>
+      </div>
+      <div class="tool-item">
+        <div class="tool-name">stitcher</div>
+        <p class="tool-desc">Hover an edge of an image and it finds the ones whose opposite edge best continues it, like puzzle pieces.</p>
+      </div>
+      <div class="tool-item">
+        <div class="tool-name">contrastExplorer</div>
+        <p class="tool-desc">Drag a patch across an image to find others that share its qualities in that region.</p>
+      </div>
+      <div class="tool-item">
+        <div class="tool-name">face/bodyCollage</div>
+        <p class="tool-desc">Inspired by the exquisite corpse. Dissects and reassembles faces and bodies into new ones, in real time.</p>
+      </div>
+      <div class="tool-item">
+        <div class="tool-name">poseMatcher</div>
+        <p class="tool-desc">A live mirror that finds archived photos matching your expression or hand gesture.</p>
+      </div>
+      <div class="tool-item">
+        <div class="tool-name">bigSort</div>
+        <p class="tool-desc">Built on CLIP. Sorts by color, content, or a queried mood, setting, or expression.</p>
+      </div>
+    </div>
+    <p class="section-note">Built with OpenCV, MediaPipe, and CLIP. Running locally. The tools will be released publicly soon.</p>
+  </div>
+
+  <!-- Archives -->
+  <div class="content-section">
+    <h2 class="section-label">Three Archives</h2>
+    <p class="section-intro">
+      Each tool was tested across three archives, each with a different relationship to the image.
+    </p>
+    <div class="archives-row">
+      <div class="archive-item">
+        <div class="archive-name">Personal</div>
+        <p class="archive-desc">892 images from my own camera.</p>
+      </div>
+      <div class="archive-item">
+        <div class="archive-name">Public</div>
+        <p class="archive-desc">1,500 images from Open Images V7, with no curatorial voice.</p>
+      </div>
+      <div class="archive-item">
+        <div class="archive-name">Live</div>
+        <p class="archive-desc">A webcam archive captured in real time during the installation.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- The Book -->
+  <div class="collage-section">
+    <h2 class="collage-label">The Book</h2>
+    <p class="collage-intro">
+      A book documents my process, from research and references to the thinking behind each tool.
+    </p>
+    <div class="media-grid" id="book-grid"></div>
+  </div>
+
+  <!-- Lightbox -->
+  <div id="lightbox">
+    <button class="lb-arrow" id="lb-prev">←</button>
+    <div id="lb-media"></div>
+    <button class="lb-arrow" id="lb-next">→</button>
+    <button id="lb-close">✕</button>
+    <div id="lb-counter"></div>
+  </div>
+
+  <script>
+    const toolsImages = [
+      'public/complicator/sunaroch_complicator_tools1.jpg',
+      'public/complicator/sunaroch_complicator_tools2.jpg',
+      'public/complicator/sunaroch_complicator_tools3.jpg',
+      'public/complicator/sunaroch_complicator_tools4.jpg',
+    ];
+
+    const installationImages = [
+      'public/complicator/sunaroch_complicator_installation1.png',
+      'public/complicator/sunaroch_complicator_installation2.png',
+      'public/complicator/sunaroch_complicator_installation3.png',
+    ];
+
+    const bookImages = [
+      'public/complicator/sunaroch_complicator_book1.gif',
+      'public/complicator/sunaroch_complicator_book2.jpg',
+      'public/complicator/sunaroch_complicator_book3.jpg',
+      'public/complicator/sunaroch_complicator_book4.jpg',
+      'public/complicator/sunaroch_complicator_book5.gif',
+      'public/complicator/sunaroch_complicator_book6.jpg',
+      'public/complicator/sunaroch_complicator_book7.jpg',
+      'public/complicator/sunaroch_complicator_book8.gif',
+      'public/complicator/sunaroch_complicator_book9.gif',
+    ];
+
+    const mediaList = [];
+    const gridsToLayout = [];
+
+    // Tools images first in lightbox
+    toolsImages.forEach(src => mediaList.push({ type: 'image', src }));
+
+    // Tools marquee (infinite scroll)
+    (function initToolsMarquee() {
+      const track = document.getElementById('tools-marquee-track');
+      // Duplicate set so the loop is seamless
+      const sequence = [...toolsImages, ...toolsImages];
+      sequence.forEach((src, i) => {
+        const img = document.createElement('img');
+        img.src = src;
+        img.alt = 'Complicator tools';
+        img.addEventListener('click', () => openLightbox(i % toolsImages.length));
+        track.appendChild(img);
+      });
+    })();
+
+    function isMobile() { return window.innerWidth < 768; }
+
+    function buildGrid(gridId, srcs, options = {}) {
+      const {
+        firstFullWidth = false,
+        desktopCols = 2,
+        mobileCols = 1,
+      } = options;
+
+      const grid = document.getElementById(gridId);
+      const localItems = [];
+
+      srcs.forEach(src => {
+        const div = document.createElement('div');
+        div.className = 'grid-item';
+        const img = document.createElement('img');
+        img.src = src;
+        img.alt = '';
+        div.appendChild(img);
+        grid.appendChild(div);
+
+        const index = mediaList.length;
+        mediaList.push({ type: 'image', src });
+        div.addEventListener('click', () => openLightbox(index));
+        localItems.push(div);
+      });
+
+      function layout() {
+        const mobile = isMobile();
+        const numCols = mobile ? mobileCols : desktopCols;
+        const gap = mobile ? 16 : 24;
+        const vGap = mobile ? 24 : 40;
+        const containerWidth = grid.offsetWidth;
+        const colWidth = (containerWidth - gap * (numCols - 1)) / numCols;
+        const colTops = Array(numCols).fill(0);
+
+        let startIndex = 0;
+        if (firstFullWidth && localItems.length) {
+          const first = localItems[0];
+          first.style.width = containerWidth + 'px';
+          first.style.left = '0px';
+          first.style.top = '0px';
+          const firstBottom = first.offsetHeight + vGap;
+          for (let c = 0; c < numCols; c++) colTops[c] = firstBottom;
+          startIndex = 1;
+        }
+
+        for (let i = startIndex; i < localItems.length; i++) {
+          const el = localItems[i];
+          const col = (i - startIndex) % numCols;
+          el.style.width = colWidth + 'px';
+          el.style.left = (col * (colWidth + gap)) + 'px';
+          el.style.top = colTops[col] + 'px';
+          colTops[col] += el.offsetHeight + vGap;
+        }
+
+        grid.style.height = Math.max(...colTops, 0) + 'px';
+      }
+
+      gridsToLayout.push(layout);
+      return localItems.map(el => el.querySelector('img'));
+    }
+
+    const allImgs = [
+      ...buildGrid('installation-grid', installationImages, {
+        desktopCols: 3,
+        mobileCols: 1,
+      }),
+      ...buildGrid('book-grid', bookImages, {
+        firstFullWidth: true,
+        desktopCols: 2,
+        mobileCols: 1,
+      }),
+    ];
+
+    function layoutAll() { gridsToLayout.forEach(fn => fn()); }
+
+    Promise.all(allImgs.map(img => img.complete
+      ? Promise.resolve()
+      : new Promise(r => { img.onload = r; img.onerror = r; })
+    )).then(layoutAll);
+
+    window.addEventListener('resize', layoutAll);
+
+    let current = 0;
+    const lightbox  = document.getElementById('lightbox');
+    const lbMedia   = document.getElementById('lb-media');
+    const lbCounter = document.getElementById('lb-counter');
+
+    function openLightbox(index) {
+      current = index;
+      renderLightbox();
+      lightbox.classList.add('open');
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('open');
+      lbMedia.innerHTML = '';
+    }
+
+    function renderLightbox() {
+      lbMedia.innerHTML = '';
+      const item = mediaList[current];
+      const img = document.createElement('img');
+      img.src = item.src;
+      lbMedia.appendChild(img);
+      lbCounter.textContent = `${current + 1} / ${mediaList.length}`;
+    }
+
+    function prev() { current = (current - 1 + mediaList.length) % mediaList.length; renderLightbox(); }
+    function next() { current = (current + 1) % mediaList.length; renderLightbox(); }
+
+    document.getElementById('lb-prev').addEventListener('click', prev);
+    document.getElementById('lb-next').addEventListener('click', next);
+    document.getElementById('lb-close').addEventListener('click', closeLightbox);
+
+    lightbox.addEventListener('click', e => {
+      if (e.target === lightbox) closeLightbox();
+    });
+
+    document.addEventListener('keydown', e => {
+      if (!lightbox.classList.contains('open')) return;
+      if (e.key === 'ArrowLeft')  prev();
+      if (e.key === 'ArrowRight') next();
+      if (e.key === 'Escape')     closeLightbox();
+    });
+
+    // Swipe support
+    let _swipeX = 0;
+    lightbox.addEventListener('touchstart', e => { _swipeX = e.touches[0].clientX; }, { passive: true });
+    lightbox.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - _swipeX;
+      if (Math.abs(dx) > 50) { dx < 0 ? next() : prev(); }
+    }, { passive: true });
+  </script>
+
+  <footer class="site-footer">
+    <div class="footer-col">
+      <span class="footer-label">Work</span>
+      <a href="complicator.html"><b>Complicator</b></a>
+      <a href="i-miss-everyone.html">I Miss Everyone</a>
+      <a href="a-hair-between-us.html">A Hair Between Us</a>
+      <a href="liquified-self-portrait.html">Liquified Self Portrait</a>
+      <a href="dtfa-website.html">DTFA Website</a>
+      <a href="suntina.html">Suntina</a>
+      <a href="archive.html">More</a>
+    </div>
+    <div class="footer-col footer-info">
+      <b>SUN AROCH</b> IS A <b>CREATIVE TECHNOLOGIST</b><br>
+      <b>DESIGNER</b><br>
+      <b>PROGRAMMER</b><br>
+      <b>MUSICIAN</b><br>
+      <b>ARTIST</b><br>
+      FROM NYC<br><br>
+      <b>BACHELORS</b>: COMPUTER SCIENCE @ BARNARD<br>
+      <b>MASTER</b>: APPLIED AI FOR ART AND DESIGN @ ELISAVA (CURRENT)<br><br>
+      <b>EMAIL</b>: AROCHSUN@GMAIL.COM<br>
+      <a href="https://www.instagram.com/sunaroch/" target="_blank"><b>INSTAGRAM</b></a><br>
+      <a href="https://www.linkedin.com/in/sunaroch" target="_blank"><b>LINKEDIN</b></a>
+    </div>
+  </footer>
+
+  <script>
+    // Page transition
+    const _overlay = document.getElementById('page-overlay');
+    function _navigateTo(url) {
+      _overlay.style.animation = 'none';
+      _overlay.style.transition = 'none';
+      _overlay.style.opacity = '0';
+      void _overlay.offsetHeight; // force reflow
+      _overlay.style.transition = 'opacity 0.5s ease';
+      _overlay.style.opacity = '1';
+      _overlay.style.pointerEvents = 'all';
+      setTimeout(() => { window.location.href = url; }, 500);
+    }
+    document.querySelectorAll('a[href]').forEach(a => {
+      const href = a.getAttribute('href');
+      if (href && !href.startsWith('#') && !href.startsWith('http') && !href.startsWith('mailto')) {
+        a.addEventListener('click', e => { e.preventDefault(); _navigateTo(href); });
+      }
+    });
+    // Fix Safari bfcache: reset overlay when page is restored from back/forward cache
+    window.addEventListener('pageshow', e => {
+      if (e.persisted) {
+        _overlay.style.transition = 'none';
+        _overlay.style.opacity = '0';
+        _overlay.style.pointerEvents = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

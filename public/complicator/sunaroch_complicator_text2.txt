@@ -1,0 +1,28 @@
+ENGLISH:
+Six experimental tools which reorganize image archives. The machine sorts, you decide what it means. An archive without memory is just storage; the tools recycle what you already have, letting unexpected connections surface from the archive you've been carrying all along.
+
+	gridMatcher
+	stitcher
+	contrastExplorer
+	face/bodyCollage
+	poseMatcher
+	bigSort
+
+Three Archives: Each tool was tested across three sources, each with a different relationship to the image: a personal archive from my own camera, a public dataset with no curatorial voice, and a live archive captured in real time. The same tools produced different kinds of meaning depending on where the images came from.
+
+An Echo of This Room: Complicator takes physical form in a live installation. A webcam, a Raspberry Pi, and a thermal printer turn everyone who walks through the space into the source material, building a collective portrait made entirely of the people who passed through it. A self-portrait of a room that no longer exists.
+
+
+SPANISH:
+Seis herramientas experimentales que reorganizan archivos de imágenes. La máquina ordena, tú decides lo que significa. Un archivo sin memoria no es más que almacenamiento; las herramientas reciclan lo que ya tienes, dejando que surjan conexiones inesperadas del archivo que has llevado contigo todo este tiempo.
+
+	gridMatcher
+	stitcher
+	contrastExplorer
+	face/bodyCollage
+	poseMatcher
+	bigSort
+
+Tres archivos: Cada herramienta se puso a prueba con tres fuentes distintas, cada una con una relación diferente con la imagen: un archivo personal tomado con mi propia cámara, un conjunto de datos público sin voz curatorial y un archivo en directo capturado en tiempo real. Las mismas herramientas produjeron significados distintos según la procedencia de las imágenes.
+
+An Echo of This Room: Complicator toma forma física en una instalación en directo. Una webcam, una Raspberry Pi y una impresora térmica convierten a cada persona que atraviesa el espacio en material de origen, construyendo un retrato colectivo hecho enteramente de quienes pasaron por él. El autorretrato de una sala que ya no existe.
