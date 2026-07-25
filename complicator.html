@@ -268,6 +268,7 @@
     .media-grid {
       position: relative;
       width: 100%;
+      margin-bottom: 24px;
     }
 
     .grid-item {
@@ -415,25 +416,27 @@
         height: auto;
         border-right: none;
         padding: 20px;
-        padding-top: 100px;
-        padding-bottom: 28px;
+        padding-top: 120px;
+        padding-bottom: 32px;
       }
       .right-panel {
         width: 100%;
         height: auto;
         overflow: hidden;
         min-height: 0;
+        padding: 0 20px 8px;
       }
       .right-panel img.hero {
         width: 100%;
         height: auto;
-        aspect-ratio: 4 / 3;
-        object-fit: cover;
+        aspect-ratio: auto;
+        object-fit: contain;
+        display: block;
       }
       .project-nav {
         position: fixed;
-        top: 24px;
-        right: 20px;
+        top: 28px;
+        right: 28px;
         left: auto;
         bottom: auto;
         font-size: 28px;
@@ -443,7 +446,7 @@
         border-radius: 0;
       }
       .back-arrow {
-        top: 24px;
+        top: 28px;
         left: 20px;
         font-size: 28px;
       }
@@ -453,7 +456,7 @@
       }
       .project-subtitle {
         font-size: 10px;
-        letter-spacing: 0.12em;
+        letter-spacing: 0.1em;
         max-width: 100%;
         margin-bottom: 16px;
       }
@@ -464,29 +467,36 @@
       }
       .content-section,
       .collage-section {
-        padding: 36px 20px 8px;
+        padding: 48px 20px 28px;
       }
       .section-intro,
       .collage-intro {
         max-width: 100%;
-        margin-bottom: 24px;
+        margin-bottom: 28px;
       }
       .tools-grid,
       .archives-row {
         grid-template-columns: 1fr;
-        gap: 22px;
-        margin-bottom: 20px;
+        gap: 28px;
+        margin-bottom: 28px;
       }
       .section-note {
         font-size: 11px;
         letter-spacing: 0.08em;
+        margin-top: 8px;
+      }
+      .tools-marquee {
+        margin: 0 0 36px;
       }
       .tools-marquee-track img {
-        height: 160px;
+        height: 140px;
       }
       .tools-marquee-track {
-        gap: 12px;
+        gap: 16px;
         animation-duration: 28s;
+      }
+      .media-grid {
+        margin-bottom: 16px;
       }
       .lb-arrow { display: none !important; }
       #lb-media img,
@@ -497,9 +507,19 @@
       .site-footer {
         flex-direction: column;
         gap: 40px;
-        padding: 48px 20px 40px;
+        padding: 60px 20px 40px;
+        width: 100%;
       }
-      .footer-info { text-align: left; }
+      .footer-col {
+        width: 100%;
+        letter-spacing: 0.08em;
+        font-size: 13px;
+        word-break: break-word;
+      }
+      .footer-info {
+        text-align: left;
+        max-width: none;
+      }
     }
 
     /* ── Page transition overlay ── */
@@ -535,7 +555,7 @@
       <div class="project-subtitle">What the Machine Sees vs. What the Human Remembers</div>
 
       <p class="project-blurb">
-        We are used to browsing archives by time, file type, and search. But what if potential connections come from complications or intersections of unrelated decisions? Complicator redefines AI for creative use, a chance to discover new perspectives from the visual media we already have. The machine sorts, you decide what it means. A collage of sorts. A combination of combinations. Each controlled by a human.
+        Masters thesis for Applied AI for Art and Design at Elisava. We are used to browsing archives by time, file type, and search. But what if potential connections come from complications or intersections of unrelated decisions? Complicator redefines AI for creative use, a chance to discover new perspectives from the visual media we already have. The machine sorts, you decide what it means. A collage of sorts. A combination of combinations. Each controlled by a human.
       </p>
 
     </div>
@@ -689,6 +709,8 @@
         firstFullWidth = false,
         desktopCols = 2,
         mobileCols = 1,
+        mobileVGap = 48,
+        desktopVGap = 48,
       } = options;
 
       const grid = document.getElementById(gridId);
@@ -712,8 +734,8 @@
       function layout() {
         const mobile = isMobile();
         const numCols = mobile ? mobileCols : desktopCols;
-        const gap = mobile ? 16 : 24;
-        const vGap = mobile ? 24 : 40;
+        const gap = mobile ? 20 : 24;
+        const vGap = mobile ? mobileVGap : desktopVGap;
         const containerWidth = grid.offsetWidth;
         const colWidth = (containerWidth - gap * (numCols - 1)) / numCols;
         const colTops = Array(numCols).fill(0);
@@ -749,11 +771,13 @@
       ...buildGrid('installation-grid', installationImages, {
         desktopCols: 3,
         mobileCols: 1,
+        mobileVGap: 48,
       }),
       ...buildGrid('book-grid', bookImages, {
         firstFullWidth: true,
         desktopCols: 2,
         mobileCols: 1,
+        mobileVGap: 24,
       }),
     ];
 
