@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Work — Sun Aroch</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #000;
+      color: #c0bdb8;
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-y: contain;
+      min-height: 100dvh;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: calc(28px + env(safe-area-inset-top, 0px))
+               calc(28px + env(safe-area-inset-right, 0px))
+               16px
+               calc(28px + env(safe-area-inset-left, 0px));
+      font-size: 21px;
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      pointer-events: none;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.92) 40%, rgba(0,0,0,0));
+    }
+
+    nav a {
+      color: #c0bdb8;
+      text-decoration: none;
+      pointer-events: all;
+      transition: color 0.2s;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      nav a:hover { color: #fff; }
+    }
+
+    .nav-name {
+      pointer-events: all;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 80px;
+      pointer-events: all;
+    }
+
+    .nav-info {
+      position: relative;
+      display: inline-block;
+    }
+
+    .nav-current {
+      color: #fff;
+      pointer-events: none;
+    }
+
+    .info-dropdown {
+      position: absolute;
+      top: calc(100% + 16px);
+      right: 0;
+      width: 320px;
+      max-width: min(320px, calc(100vw - 40px));
+      text-align: right;
+      font-size: 14px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 300;
+      color: #c0bdb8;
+      line-height: 1.8;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-4px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      max-height: min(70vh, 480px);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      background: rgba(0,0,0,0.92);
+      padding: 4px 0 12px;
+    }
+
+    .info-dropdown.open {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateY(0);
+    }
+
+    .info-dropdown b { font-weight: 600; }
+    .info-dropdown a {
+      color: inherit;
+      text-decoration: none;
+      border-bottom: 1px solid #444;
+    }
+
+    #feed {
+      padding: calc(100px + env(safe-area-inset-top, 0px)) 16px calc(80px + env(safe-area-inset-bottom, 0px));
+      columns: 4;
+      column-gap: 12px;
+      width: 100%;
+      min-height: 120vh;
+    }
+
+    .feed-item {
+      break-inside: avoid;
+      -webkit-column-break-inside: avoid;
+      page-break-inside: avoid;
+      display: block;
+      width: 100%;
+      margin-bottom: 12px;
+      cursor: pointer;
+      overflow: hidden;
+      position: relative;
+      background: #0a0a0a;
+      border-radius: 0;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .feed-item img,
+    .feed-item video {
+      width: 100%;
+      height: auto;
+      display: block;
+      vertical-align: top;
+      transition: opacity 0.25s ease;
+      pointer-events: none;
+      border-radius: 0;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .feed-item:hover img,
+      .feed-item:hover video {
+        opacity: 0.75;
+      }
+    }
+
+    .feed-item:active img,
+    .feed-item:active video {
+      opacity: 0.7;
+    }
+
+    #sentinel {
+      height: 1px;
+      width: 100%;
+      pointer-events: none;
+      margin-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    @media (max-width: 1100px) {
+      #feed { columns: 3; }
+    }
+
+    @media (max-width: 768px) {
+      nav {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+        padding: calc(20px + env(safe-area-inset-top, 0px))
+                 calc(20px + env(safe-area-inset-right, 0px))
+                 20px
+                 calc(20px + env(safe-area-inset-left, 0px));
+        font-size: 18px;
+      }
+      .nav-links { gap: 32px; }
+      .nav-links a,
+      .nav-current,
+      #info-trigger {
+        padding: 6px 0;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+      }
+      .info-dropdown {
+        right: auto;
+        left: 0;
+        text-align: left;
+        width: calc(100vw - 40px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
+        max-width: 280px;
+        font-size: 13px;
+        letter-spacing: 0.1em;
+      }
+      #feed {
+        padding: calc(130px + env(safe-area-inset-top, 0px)) 8px calc(48px + env(safe-area-inset-bottom, 0px));
+        columns: 2;
+        column-gap: 8px;
+      }
+      .feed-item { margin-bottom: 8px; }
+    }
+
+    @media (max-width: 360px) {
+      nav { font-size: 16px; letter-spacing: 0.1em; }
+      .nav-links { gap: 24px; }
+      #feed {
+        padding-left: 6px;
+        padding-right: 6px;
+        column-gap: 6px;
+      }
+    }
+
+    @keyframes _overlayFadeIn {
+      from { opacity: 1; }
+      to   { opacity: 0; }
+    }
+    #page-overlay {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 9999;
+      pointer-events: none;
+      animation: _overlayFadeIn 0.6s ease forwards;
+    }
+  </style>
+</head>
+<body>
+  <div id="page-overlay"></div>
+
+  <nav>
+    <a class="nav-name" href="index.html">Sun Aroch</a>
+    <div class="nav-links">
+      <span class="nav-current">Work</span>
+      <div class="nav-info" id="nav-info">
+        <a href="#" id="info-trigger">Info</a>
+        <div class="info-dropdown" id="info-dropdown">
+          <b>SUN AROCH</b> IS A <b>CREATIVE TECHNOLOGIST</b><br>
+          <b>DESIGNER</b><br>
+          <b>PROGRAMMER</b><br>
+          <b>MUSICIAN</b><br>
+          <b>ARTIST</b><br>
+          FROM NYC<br><br>
+          <b>BACHELORS</b>: COMPUTER SCIENCE @ BARNARD<br>
+          <b>MASTER</b>: APPLIED AI FOR ART AND DESIGN @ ELISAVA (current)<br><br>
+          <b>EMAIL</b>: AROCHSUN@GMAIL.COM<br>
+          <a href="https://www.instagram.com/sunaroch/" target="_blank"><b>INSTAGRAM</b></a><br>
+          <a href="https://www.linkedin.com/in/sunaroch" target="_blank"><b>LINKEDIN</b></a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div id="feed"></div>
+  <div id="sentinel"></div>
+
+  <script>
+    const ITEMS = [
+  { src: 'public/searchables/searchables1.png', type: 'image', link: 'searchables.html' },
+  { src: 'public/facemax/facemax1.png', type: 'image', link: 'facemax.html' },
+  { src: 'public/facemax/facemax10.gif', type: 'image', link: 'facemax.html' },
+  { src: 'public/facemax/facemax13.mp4', type: 'video', link: 'facemax.html' },
+  { src: 'public/facemax/facemax2.png', type: 'image', link: 'facemax.html' },
+  { src: 'public/facemax/facemax20.gif', type: 'image', link: 'facemax.html' },
+  { src: 'public/facemax/facemax21.gif', type: 'image', link: 'facemax.html' },
+  { src: 'public/facemax/facemax22.gif', type: 'image', link: 'facemax.html' },
+  { src: 'public/facemax/facemax23.gif', type: 'image', link: 'facemax.html' },
+  { src: 'public/facemax/facemax24.gif', type: 'image', link: 'facemax.html' },
+  { src: 'public/facemax/facemax25.gif', type: 'image', link: 'facemax.html' },
+  { src: 'public/facemax/facemax26.gif', type: 'image', link: 'facemax.html' },
+  { src: 'public/facemax/facemax27.gif', type: 'image', link: 'facemax.html' },
+  { src: 'public/facemax/facemax3.png', type: 'image', link: 'facemax.html' },
+  { src: 'public/facemax/facemax4.png', type: 'image', link: 'facemax.html' },
+  { src: 'public/facemax/facemax6.png', type: 'image', link: 'facemax.html' },
+  { src: 'public/facemax/facemax8.png', type: 'image', link: 'facemax.html' },
+  { src: 'public/facemax/facemax9.png', type: 'image', link: 'facemax.html' },
+  { src: 'public/complicator/thumbs/sunaroch_complicator_book1.gif', type: 'image', link: 'complicator.html' },
+  { src: 'public/complicator/thumbs/sunaroch_complicator_book2.jpg', type: 'image', link: 'complicator.html' },
+  { src: 'public/complicator/thumbs/sunaroch_complicator_book4.jpg', type: 'image', link: 'complicator.html' },
+  { src: 'public/complicator/thumbs/sunaroch_complicator_book5.gif', type: 'image', link: 'complicator.html' },
+  { src: 'public/complicator/thumbs/sunaroch_complicator_book8.gif', type: 'image', link: 'complicator.html' },
+  { src: 'public/complicator/thumbs/sunaroch_complicator_book9.gif', type: 'image', link: 'complicator.html' },
+  { src: 'public/complicator/thumbs/sunaroch_complicator_installation1.jpg', type: 'image', link: 'complicator.html' },
+  { src: 'public/complicator/thumbs/sunaroch_complicator_installation2.jpg', type: 'image', link: 'complicator.html' },
+  { src: 'public/complicator/thumbs/sunaroch_complicator_installation3.jpg', type: 'image', link: 'complicator.html' },
+  { src: 'public/complicator/thumbs/sunaroch_complicator_installation4.jpg', type: 'image', link: 'complicator.html' },
+  { src: 'public/imisseveryone/imisseveryone1.mp4', type: 'video', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone10.mp4', type: 'video', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone11.mp4', type: 'video', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone12.mp4', type: 'video', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone13.mp4', type: 'video', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone14.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone15.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone16.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone17.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone18.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone19.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone2.mp4', type: 'video', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone20.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone21.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone22.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone23.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone24.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone25.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone26.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone27.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone28.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone29.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone3.mp4', type: 'video', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone30.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone32.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone33.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone34.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone35.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone36.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone37.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone38.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone39.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone4.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone40.jpg', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone41.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone42.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone43.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone45.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone46.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone47.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone48.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone5.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone6.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone7.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone8.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/imisseveryone/imisseveryone9.png', type: 'image', link: 'i-miss-everyone.html' },
+  { src: 'public/ahairbetweenus/ahairbetweenus1.png', type: 'image', link: 'a-hair-between-us.html' },
+  { src: 'public/ahairbetweenus/ahairbetweenus2.png', type: 'image', link: 'a-hair-between-us.html' },
+  { src: 'public/ahairbetweenus/ahairbetweenus3.png', type: 'image', link: 'a-hair-between-us.html' },
+  { src: 'public/ahairbetweenus/ahairbetweenus4.png', type: 'image', link: 'a-hair-between-us.html' },
+  { src: 'public/ahairbetweenus/ahairbetweenus5.png', type: 'image', link: 'a-hair-between-us.html' },
+  { src: 'public/ahairbetweenus/ahairbetweenus6.png', type: 'image', link: 'a-hair-between-us.html' },
+  { src: 'public/liquified/liquified1.png', type: 'image', link: 'liquified-self-portrait.html' },
+  { src: 'public/liquified/liquified2.png', type: 'image', link: 'liquified-self-portrait.html' },
+  { src: 'public/liquified/liquified3.png', type: 'image', link: 'liquified-self-portrait.html' },
+  { src: 'public/liquified/liquified4.jpg', type: 'image', link: 'liquified-self-portrait.html' },
+  { src: 'public/liquified/liquified5.jpg', type: 'image', link: 'liquified-self-portrait.html' },
+  { src: 'public/DTFA/DTFA1.mp4', type: 'video', link: 'dtfa-website.html' },
+  { src: 'public/DTFA/DTFA2.mp4', type: 'video', link: 'dtfa-website.html' },
+  { src: 'public/DTFA/DTFA3.mp4', type: 'video', link: 'dtfa-website.html' },
+  { src: 'public/suntina/suntina1.gif', type: 'image', link: 'suntina.html' },
+  { src: 'public/suntina/suntina10.gif', type: 'image', link: 'suntina.html' },
+  { src: 'public/suntina/suntina11.gif', type: 'image', link: 'suntina.html' },
+  { src: 'public/suntina/suntina12.mp4', type: 'video', link: 'suntina.html' },
+  { src: 'public/suntina/suntina13.mp4', type: 'video', link: 'suntina.html' },
+  { src: 'public/suntina/suntina2.png', type: 'image', link: 'suntina.html' },
+  { src: 'public/suntina/suntina3.png', type: 'image', link: 'suntina.html' },
+  { src: 'public/suntina/suntina4.gif', type: 'image', link: 'suntina.html' },
+  { src: 'public/suntina/suntina5.png', type: 'image', link: 'suntina.html' },
+  { src: 'public/suntina/suntina6.png', type: 'image', link: 'suntina.html' },
+  { src: 'public/suntina/suntina7.png', type: 'image', link: 'suntina.html' },
+  { src: 'public/suntina/suntina8.gif', type: 'image', link: 'suntina.html' },
+  { src: 'public/suntina/suntina9.gif', type: 'image', link: 'suntina.html' },
+  { src: 'public/archive/archive1.gif', type: 'image', link: 'archive.html' },
+  { src: 'public/archive/archive10.png', type: 'image', link: 'archive.html' },
+  { src: 'public/archive/archive11.gif', type: 'image', link: 'archive.html' },
+  { src: 'public/archive/archive12.png', type: 'image', link: 'archive.html' },
+  { src: 'public/archive/archive13.png', type: 'image', link: 'archive.html' },
+  { src: 'public/archive/archive14.png', type: 'image', link: 'archive.html' },
+  { src: 'public/archive/archive15.mp4', type: 'video', link: 'archive.html' },
+  { src: 'public/archive/archive16.png', type: 'image', link: 'archive.html' },
+  { src: 'public/archive/archive17.png', type: 'image', link: 'archive.html' },
+  { src: 'public/archive/archive18.png', type: 'image', link: 'archive.html' },
+  { src: 'public/archive/archive19.png', type: 'image', link: 'archive.html' },
+  { src: 'public/archive/archive2.jpg', type: 'image', link: 'archive.html' },
+  { src: 'public/archive/archive20.png', type: 'image', link: 'archive.html' },
+  { src: 'public/archive/archive21.png', type: 'image', link: 'archive.html' },
+  { src: 'public/archive/archive22.gif', type: 'image', link: 'archive.html' },
+  { src: 'public/archive/archive23.png', type: 'image', link: 'archive.html' },
+  { src: 'public/archive/archive3.png', type: 'image', link: 'archive.html' },
+  { src: 'public/archive/archive4.png', type: 'image', link: 'archive.html' },
+  { src: 'public/archive/archive5.gif', type: 'image', link: 'archive.html' },
+  { src: 'public/archive/archive6.png', type: 'image', link: 'archive.html' },
+  { src: 'public/archive/archive7.png', type: 'image', link: 'archive.html' },
+  { src: 'public/archive/archive8.gif', type: 'image', link: 'archive.html' },
+  { src: 'public/archive/archive9.png', type: 'image', link: 'archive.html' }
+    ];
+
+    function shuffle(arr) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    const feed = document.getElementById('feed');
+    const isMobile = () => window.matchMedia('(max-width: 768px)').matches
+      || (navigator.maxTouchPoints > 0 && window.innerWidth < 900);
+    const BATCH = () => (isMobile() ? 12 : 24);
+    const SEED = () => (isMobile() ? 24 : 48);
+    let pool = shuffle(ITEMS);
+    let poolIndex = 0;
+    let appending = false;
+
+    function nextItem() {
+      if (poolIndex >= pool.length) {
+        pool = shuffle(ITEMS);
+        poolIndex = 0;
+      }
+      return pool[poolIndex++];
+    }
+
+    function createItem(item) {
+      const el = document.createElement('div');
+      el.className = 'feed-item';
+      el.dataset.link = item.link;
+      el.setAttribute('role', 'link');
+      el.setAttribute('tabindex', '0');
+
+      if (item.type === 'image') {
+        const img = document.createElement('img');
+        img.src = item.src;
+        img.alt = '';
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        img.draggable = false;
+        el.appendChild(img);
+      } else {
+        const video = document.createElement('video');
+        video.muted = true;
+        video.defaultMuted = true;
+        video.loop = true;
+        video.playsInline = true;
+        video.preload = isMobile() ? 'none' : 'metadata';
+        video.setAttribute('playsinline', '');
+        video.setAttribute('webkit-playsinline', '');
+        video.setAttribute('muted', '');
+        const source = document.createElement('source');
+        source.src = item.src;
+        source.type = item.src.endsWith('.mov') ? 'video/quicktime' : 'video/mp4';
+        video.appendChild(source);
+        el.appendChild(video);
+
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              if (video.readyState < 2) video.load();
+              video.play().catch(() => {});
+            } else {
+              video.pause();
+            }
+          });
+        }, { rootMargin: isMobile() ? '80px' : '200px' });
+        io.observe(video);
+      }
+
+      // Prefer click; guard against accidental drag-scroll taps on mobile
+      let touchX = 0, touchY = 0, moved = false;
+      el.addEventListener('touchstart', (e) => {
+        const t = e.changedTouches[0];
+        touchX = t.clientX;
+        touchY = t.clientY;
+        moved = false;
+      }, { passive: true });
+      el.addEventListener('touchmove', (e) => {
+        const t = e.changedTouches[0];
+        if (Math.abs(t.clientX - touchX) > 10 || Math.abs(t.clientY - touchY) > 10) {
+          moved = true;
+        }
+      }, { passive: true });
+      el.addEventListener('click', (e) => {
+        if (moved) return;
+        e.preventDefault();
+        _navigateTo(item.link);
+      });
+      el.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          _navigateTo(item.link);
+        }
+      });
+      return el;
+    }
+
+    function appendBatch(n = BATCH()) {
+      if (appending) return;
+      appending = true;
+      const frag = document.createDocumentFragment();
+      for (let i = 0; i < n; i++) {
+        frag.appendChild(createItem(nextItem()));
+      }
+      feed.appendChild(frag);
+      appending = false;
+    }
+
+    // Seed enough content to fill viewport + buffer
+    appendBatch(SEED());
+
+    const sentinel = document.getElementById('sentinel');
+    const infinite = new IntersectionObserver((entries) => {
+      if (entries.some(e => e.isIntersecting)) {
+        appendBatch();
+      }
+    }, { rootMargin: isMobile() ? '600px' : '1200px' });
+    infinite.observe(sentinel);
+
+    // Info dropdown
+    const navInfo = document.getElementById('nav-info');
+    const infoDropdown = document.getElementById('info-dropdown');
+    document.getElementById('info-trigger').addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      infoDropdown.classList.toggle('open');
+    });
+    infoDropdown.addEventListener('click', (e) => e.stopPropagation());
+    document.addEventListener('click', (e) => {
+      if (!navInfo.contains(e.target)) infoDropdown.classList.remove('open');
+    });
+    window.addEventListener('scroll', () => {
+      if (infoDropdown.classList.contains('open')) infoDropdown.classList.remove('open');
+    }, { passive: true });
+
+    // Page transition
+    const _overlay = document.getElementById('page-overlay');
+    function _navigateTo(url) {
+      _overlay.style.animation = 'none';
+      _overlay.style.transition = 'none';
+      _overlay.style.opacity = '0';
+      void _overlay.offsetHeight;
+      _overlay.style.transition = 'opacity 0.5s ease';
+      _overlay.style.opacity = '1';
+      _overlay.style.pointerEvents = 'all';
+      setTimeout(() => { window.location.href = url; }, 500);
+    }
+    document.querySelectorAll('a[href]').forEach(a => {
+      const href = a.getAttribute('href');
+      if (href && !href.startsWith('#') && !href.startsWith('http') && !href.startsWith('mailto')) {
+        a.addEventListener('click', e => { e.preventDefault(); _navigateTo(href); });
+      }
+    });
+    window.addEventListener('pageshow', e => {
+      if (e.persisted) {
+        _overlay.style.transition = 'none';
+        _overlay.style.opacity = '0';
+        _overlay.style.pointerEvents = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

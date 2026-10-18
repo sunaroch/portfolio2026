@@ -547,8 +547,8 @@
       <a href="index.html" class="back-arrow">Sun Aroch</a>
 
     <nav class="project-nav">
-      <a href="archive.html">←</a>
-      <a href="i-miss-everyone.html">→</a>
+      <a href="facemax.html">←</a>
+        <a href="i-miss-everyone.html">→</a>
     </nav>
 
       <div class="project-title"><b>Complicator</b></div>
@@ -844,7 +844,9 @@
 
   <footer class="site-footer">
     <div class="footer-col">
-      <span class="footer-label">Work</span>
+            <a href="work.html" class="footer-label" style="color:#444;text-decoration:none;margin-bottom:8px;">Work</a>
+      <a href="searchables.html">Searchables</a>
+      <a href="facemax.html">Facemax</a>
       <a href="complicator.html"><b>Complicator</b></a>
       <a href="i-miss-everyone.html">I Miss Everyone</a>
       <a href="a-hair-between-us.html">A Hair Between Us</a>
@@ -887,6 +889,19 @@
         a.addEventListener('click', e => { e.preventDefault(); _navigateTo(href); });
       }
     });
+
+    // Keyboard: ← → through projects (when lightbox closed)
+    document.addEventListener('keydown', e => {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      const lb = document.getElementById('lightbox');
+      if (lb && lb.classList.contains('open')) return;
+      const links = document.querySelectorAll('.project-nav a[href]');
+      if (links.length < 2) return;
+      e.preventDefault();
+      const href = (e.key === 'ArrowLeft' ? links[0] : links[1]).getAttribute('href');
+      if (href) _navigateTo(href);
+    });
+
     // Fix Safari bfcache: reset overlay when page is restored from back/forward cache
     window.addEventListener('pageshow', e => {
       if (e.persisted) {

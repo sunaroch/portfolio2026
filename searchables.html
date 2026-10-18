@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Searchables — Sun Aroch</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #000;
+      color: #c0bdb8;
+      overflow-y: auto;
+    }
+
+    .layout {
+      display: flex;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+
+    .left-panel {
+      flex: 0 0 34%;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 28px;
+      padding-top: 280px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .back-arrow {
+      position: fixed;
+      top: 28px;
+      left: 28px;
+      font-size: 21px;
+      color: #c0bdb8;
+      text-decoration: none;
+      transition: color 0.2s;
+      display: inline-block;
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      z-index: 200;
+    }
+    .back-arrow:hover { color: #fff; }
+
+    .project-nav {
+      position: fixed;
+      left: calc(34% - 120px);
+      top: 28px;
+      z-index: 200;
+      display: flex;
+      flex-direction: row;
+      gap: 24px;
+      font-size: 21px;
+      font-weight: 300;
+    }
+
+    .project-nav a {
+      color: #c0bdb8;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .project-nav a:hover { color: #fff; }
+
+    .project-title {
+      font-size: 20px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 300;
+      color: #c0bdb8;
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+
+    .project-blurb {
+      font-size: 14px;
+      letter-spacing: 0.03em;
+      line-height: 1.6;
+      font-weight: 600;
+      color: #999;
+      margin-bottom: 28px;
+      max-width: 450px;
+    }
+
+    .right-panel {
+      flex: 1;
+      min-width: 0;
+      padding: 28px 28px 28px 0;
+      display: flex;
+      align-items: stretch;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+
+    /* ── Searchables hero demo ── */
+    .hero-stage {
+      position: relative;
+      isolation: isolate;
+      width: 100%;
+      height: 100%;
+      background: #080809;
+      overflow: hidden;
+    }
+
+    .hero-splash {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .hero-mosaic {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      overflow: hidden;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.7s ease;
+    }
+
+    .hero-splash.is-live .hero-mosaic,
+    .hero-splash.is-leaving .hero-mosaic {
+      opacity: 1;
+    }
+
+    .hero-mosaic-port {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .hero-mosaic::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(
+          180deg,
+          rgba(8, 8, 9, 0.55) 0%,
+          transparent 14%,
+          transparent 86%,
+          rgba(8, 8, 9, 0.55) 100%
+        );
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .hero-mosaic-inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 5.5rem 0.75rem 5rem;
+      min-height: 220%;
+      box-sizing: border-box;
+    }
+
+    .hero-splash.is-live .hero-mosaic-inner,
+    .hero-splash.is-leaving .hero-mosaic-inner {
+      animation: hero-inner-scroll 16s linear forwards;
+      will-change: transform;
+    }
+
+    .hero-mosaic-inner.is-waving .hero-tile {
+      will-change: opacity, transform;
+    }
+
+    .hero-splash.is-leaving .hero-mosaic-inner {
+      animation-play-state: paused;
+    }
+
+    @keyframes hero-inner-scroll {
+      from { transform: translate3d(0, 0, 0); }
+      to { transform: translate3d(0, -28%, 0); }
+    }
+
+    .hero-mosaic-col {
+      flex: 1 1 0;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .hero-tile {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      border-radius: 0;
+      opacity: 0;
+      transform: scale(0.985) translateY(6px);
+      transition:
+        opacity 0.72s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.72s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .hero-splash.is-leaving .hero-tile {
+      opacity: 0;
+      transform: scale(0.99) translateY(-10px);
+      transition:
+        opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .hero-tile img {
+      display: block;
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      vertical-align: top;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .hero-splash.is-live .hero-tile {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+
+    .hero-chrome {
+      position: absolute;
+      z-index: 2;
+      left: 50%;
+      top: 38%;
+      transform: translate(-50%, -50%);
+      width: min(34rem, calc(100% - 3rem));
+      pointer-events: none;
+    }
+
+    .hero-chrome.is-results::before {
+      content: '';
+      position: absolute;
+      inset: -1.25rem -1.75rem;
+      background: radial-gradient(ellipse 90% 80% at 50% 50%, rgba(8, 8, 9, 0.55) 0%, rgba(8, 8, 9, 0.15) 60%, transparent 78%);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .hero-search {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      width: 100%;
+      min-height: 3.1rem;
+      padding: 0.65rem 1.1rem;
+      border: 1px solid rgba(255, 255, 255, 0.32);
+      border-radius: 0;
+      background: #161618;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55);
+      text-align: left;
+      user-select: none;
+    }
+
+    .hero-search-shot {
+      position: relative;
+      flex-shrink: 0;
+      width: 0;
+      height: 2.1rem;
+      margin-right: 0;
+      transition:
+        width 0.62s cubic-bezier(0.22, 1, 0.36, 1),
+        margin-right 0.62s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .hero-search-shot[hidden] { display: none; }
+    .hero-search-shot.is-open {
+      width: 2.1rem;
+      margin-right: 0.62rem;
+    }
+    .hero-search-shot img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 2.1rem;
+      height: 2.1rem;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+
+    .hero-search-q {
+      flex: 1;
+      min-width: 0;
+      font-size: 1.05rem;
+      font-weight: 400;
+      color: #f4f4f5;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .hero-caret {
+      display: inline-block;
+      width: 1px;
+      height: 1.05em;
+      margin-left: 1px;
+      background: #f4f4f5;
+      vertical-align: -0.12em;
+      animation: blink 1.05s steps(1) infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    @media (max-width: 768px) {
+      body { overflow: auto; height: auto; }
+      .layout { flex-direction: column; height: auto; }
+      .left-panel {
+        height: auto;
+        position: relative;
+        padding-top: 120px;
+        padding-bottom: 32px;
+      }
+      .right-panel {
+        position: relative;
+        height: auto;
+        padding: 0 16px 48px;
+      }
+      .hero-stage {
+        height: 72vh;
+        min-height: 420px;
+      }
+      .hero-chrome {
+        width: calc(100% - 1.5rem);
+        top: 32%;
+      }
+      .hero-search-q { font-size: 1rem; }
+      .project-nav {
+        position: fixed;
+        top: 28px;
+        right: 28px;
+        left: auto;
+        font-size: 28px;
+        gap: 24px;
+      }
+      .back-arrow { font-size: 28px; }
+    }
+
+    /* ── Footer ── */
+    .site-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 80px 28px 60px;
+      gap: 60px;
+    }
+    .footer-col {
+      display: flex;
+      flex-direction: column;
+      font-size: 14px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 300;
+      color: #c0bdb8;
+      line-height: 1.8;
+    }
+    .footer-label { color: #444; margin-bottom: 8px; }
+    .footer-col a { color: #c0bdb8; text-decoration: none; }
+    .footer-col a:hover { color: #fff; }
+    .footer-col b { font-weight: 600; }
+    .footer-info {
+      display: block;
+      text-align: right;
+      max-width: 320px;
+    }
+    @media (max-width: 768px) {
+      .site-footer { flex-direction: column; gap: 40px; padding: 60px 20px 40px; }
+      .footer-info { text-align: left; }
+    }
+
+    @keyframes _overlayFadeIn {
+      from { opacity: 1; }
+      to   { opacity: 0; }
+    }
+    #page-overlay {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 9999;
+      pointer-events: none;
+      animation: _overlayFadeIn 0.6s ease forwards;
+    }
+  </style>
+</head>
+<body>
+  <div id="page-overlay"></div>
+
+  <div class="layout">
+
+    <div class="left-panel">
+      <a href="index.html" class="back-arrow">Sun Aroch</a>
+
+      <nav class="project-nav">
+        <a href="archive.html">←</a>
+        <a href="facemax.html">→</a>
+      </nav>
+
+      <div class="project-title"><a href="https://searchables.me" target="_blank" style="color:inherit;text-decoration:none;border-bottom:1px solid #444;">Searchables</a></div>
+
+      <p class="project-blurb">
+        A local visual search app for the images already on your Mac — built with Guy Aroch.<br><br>
+        Type what you remember seeing. No tags, no albums, nothing uploaded. CLIP and face recognition index your folders on-device so you can find photos by description, by person, or by a frame that feels the same. Boards let you pin, arrange, and export sets as a PDF or folder.<br><br>
+        macOS · Apple silicon · privacy-first.
+      </p>
+
+    </div>
+
+    <div class="right-panel">
+      <div class="hero-stage" aria-label="Searchables search demo">
+        <div class="hero-splash" aria-hidden="true">
+          <div class="hero-mosaic" id="hero-mosaic"></div>
+        </div>
+        <div class="hero-chrome">
+          <div class="hero-search" aria-hidden="true">
+            <span class="hero-search-shot" id="hero-shot" hidden><img alt="" /></span>
+            <span class="hero-search-q">
+              <span id="hero-query"></span><i id="hero-caret" class="hero-caret" hidden></i>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-col">
+      <a href="work.html" class="footer-label" style="color:#444;text-decoration:none;margin-bottom:8px;">Work</a>
+      <a href="searchables.html"><b>Searchables</b></a>
+      <a href="facemax.html">Facemax</a>
+      <a href="complicator.html">Complicator</a>
+      <a href="i-miss-everyone.html">I Miss Everyone</a>
+      <a href="a-hair-between-us.html">A Hair Between Us</a>
+      <a href="liquified-self-portrait.html">Liquified Self Portrait</a>
+      <a href="dtfa-website.html">DTFA Website</a>
+      <a href="suntina.html">Suntina</a>
+      <a href="archive.html">More</a>
+    </div>
+    <div class="footer-col footer-info">
+      <b>SUN AROCH</b> IS A <b>CREATIVE TECHNOLOGIST</b><br>
+      <b>DESIGNER</b><br>
+      <b>PROGRAMMER</b><br>
+      <b>MUSICIAN</b><br>
+      <b>ARTIST</b><br>
+      FROM NYC<br><br>
+      <b>BACHELORS</b>: COMPUTER SCIENCE @ BARNARD<br>
+      <b>MASTER</b>: APPLIED AI FOR ART AND DESIGN @ ELISAVA (CURRENT)<br><br>
+      <b>EMAIL</b>: AROCHSUN@GMAIL.COM<br>
+      <a href="https://www.instagram.com/sunaroch/" target="_blank"><b>INSTAGRAM</b></a><br>
+      <a href="https://www.linkedin.com/in/sunaroch" target="_blank"><b>LINKEDIN</b></a>
+    </div>
+  </footer>
+
+  <script src="public/searchables/hero-demo.js"></script>
+  <script>
+    const _overlay = document.getElementById('page-overlay');
+    function _navigateTo(url) {
+      _overlay.style.animation = 'none';
+      _overlay.style.transition = 'none';
+      _overlay.style.opacity = '0';
+      void _overlay.offsetHeight;
+      _overlay.style.transition = 'opacity 0.5s ease';
+      _overlay.style.opacity = '1';
+      _overlay.style.pointerEvents = 'all';
+      setTimeout(() => { window.location.href = url; }, 500);
+    }
+    document.querySelectorAll('a[href]').forEach(a => {
+      const href = a.getAttribute('href');
+      if (href && !href.startsWith('#') && !href.startsWith('http') && !href.startsWith('mailto')) {
+        a.addEventListener('click', e => { e.preventDefault(); _navigateTo(href); });
+      }
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      const links = document.querySelectorAll('.project-nav a[href]');
+      if (links.length < 2) return;
+      e.preventDefault();
+      const href = (e.key === 'ArrowLeft' ? links[0] : links[1]).getAttribute('href');
+      if (href) _navigateTo(href);
+    });
+
+    window.addEventListener('pageshow', e => {
+      if (e.persisted) {
+        _overlay.style.transition = 'none';
+        _overlay.style.opacity = '0';
+        _overlay.style.pointerEvents = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

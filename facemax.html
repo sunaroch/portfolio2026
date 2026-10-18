@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Facemax — Sun Aroch</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #000;
+      color: #c0bdb8;
+      overflow-y: auto;
+    }
+
+    .layout {
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .left-panel {
+      flex: 0 0 42%;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 28px;
+      padding-top: 320px;
+      display: flex;
+      flex-direction: column;
+      border-right: none;
+    }
+
+    .back-arrow {
+      position: fixed;
+      top: 28px;
+      left: 28px;
+      font-size: 21px;
+      color: #c0bdb8;
+      text-decoration: none;
+      transition: color 0.2s;
+      display: inline-block;
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      z-index: 200;
+    }
+    .back-arrow:hover { color: #fff; }
+
+    .project-nav {
+      position: fixed;
+      left: calc(42% - 120px);
+      top: 28px;
+      z-index: 200;
+      display: flex;
+      flex-direction: row;
+      gap: 24px;
+      font-size: 21px;
+      font-weight: 300;
+    }
+
+    .project-nav a {
+      color: #c0bdb8;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .project-nav a:hover { color: #fff; }
+
+    .project-title {
+      font-size: 20px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 300;
+      color: #c0bdb8;
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+
+    .project-blurb {
+      font-size: 14px;
+      letter-spacing: 0.03em;
+      line-height: 1.6;
+      font-weight: 600;
+      color: #999;
+      margin-bottom: 28px;
+      max-width: 450px;
+    }
+
+    .project-meta {
+      font-size: 5.5px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-weight: 300;
+      color: #666;
+      line-height: 2.4;
+    }
+
+    .right-panel {
+      flex: 1;
+      padding: 28px 28px 80px;
+    }
+
+    .media-grid {
+      columns: 2;
+      column-gap: 24px;
+      width: 100%;
+    }
+
+    .grid-item {
+      break-inside: avoid;
+      display: inline-block;
+      width: 100%;
+      cursor: pointer;
+      overflow: hidden;
+      margin-bottom: 24px;
+      position: relative;
+      border-radius: 0;
+      background: #111;
+    }
+
+    .grid-item img,
+    .grid-item video {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 0;
+      transition: opacity 0.25s ease;
+    }
+
+    .grid-item:hover img,
+    .grid-item:hover video {
+      opacity: 0.75;
+    }
+
+    #lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.95);
+      z-index: 500;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #lightbox.open { display: flex; }
+
+    #lb-media {
+      max-width: 80vw;
+      max-height: 85vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #lb-media img,
+    #lb-media video {
+      max-width: 80vw;
+      max-height: 85vh;
+      object-fit: contain;
+      display: block;
+    }
+
+    .lb-arrow {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #555;
+      font-size: 12px;
+      cursor: pointer;
+      padding: 20px;
+      transition: color 0.2s;
+      z-index: 501;
+      letter-spacing: 0;
+    }
+    .lb-arrow:hover { color: #fff; }
+    #lb-prev { left: 20px; }
+    #lb-next { right: 20px; }
+
+    #lb-close {
+      position: fixed;
+      top: 24px;
+      right: 28px;
+      background: none;
+      border: none;
+      color: #555;
+      font-size: 10px;
+      cursor: pointer;
+      padding: 8px;
+      transition: color 0.2s;
+      z-index: 501;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    #lb-close:hover { color: #fff; }
+
+    #lb-counter {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 5px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #444;
+    }
+
+    @media (max-width: 768px) {
+      body { overflow: auto; height: auto; }
+      .layout { flex-direction: column; height: auto; }
+      .left-panel {
+        height: auto;
+        border-right: none;
+        
+        padding-top: 120px;
+        padding-bottom: 40px;
+      }
+      .right-panel { height: auto; overflow-y: visible; min-height: 50vh; }
+      .project-nav {
+        position: fixed;
+        top: 28px;
+        right: 28px;
+        left: auto;
+        bottom: auto;
+        font-size: 28px;
+        gap: 24px;
+        background: none;
+        padding: 0;
+        border-radius: 0;
+      }
+      .project-blurb { font-size: 14px; }
+      .back-arrow { font-size: 28px; }
+      .project-meta { font-size: 5px; }
+      iframe { width: 100% !important; height: 200px !important; margin-top: 24px; }
+      .lb-arrow { display: none !important; }
+    }
+
+    /* ── Footer ── */
+    .site-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 80px 28px 60px;
+
+      gap: 60px;
+    }
+    .footer-col {
+      display: flex;
+      flex-direction: column;
+      font-size: 14px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 300;
+      color: #c0bdb8;
+      line-height: 1.8;
+    }
+    .footer-label {
+      color: #444;
+      margin-bottom: 8px;
+    }
+    .footer-col a {
+      color: #c0bdb8;
+      text-decoration: none;
+    }
+    .footer-col a:hover { color: #fff; }
+    .footer-col b {
+      font-weight: 600;
+    }
+    .footer-info {
+      display: block;
+      text-align: right;
+      max-width: 320px;
+    }
+    @media (max-width: 768px) {
+      .site-footer { flex-direction: column; gap: 40px; padding: 60px 20px 40px; }
+      .footer-info { text-align: left; }
+    }
+
+    /* ── Page transition overlay ── */
+    @keyframes _overlayFadeIn {
+      from { opacity: 1; }
+      to   { opacity: 0; }
+    }
+    #page-overlay {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 9999;
+      pointer-events: none;
+      animation: _overlayFadeIn 0.6s ease forwards;
+    }
+  </style>
+</head>
+<body>
+  <div id="page-overlay"></div>
+
+  <div class="layout">
+
+    <div class="left-panel">
+      <a href="index.html" class="back-arrow">Sun Aroch</a>
+
+      <nav class="project-nav">
+        <a href="searchables.html">←</a>
+        <a href="complicator.html">→</a>
+      </nav>
+
+      <div class="project-title"><a href="https://sunaroch.com/facemax" target="_blank" style="color:inherit;text-decoration:none;border-bottom:1px solid #444;">Facemax</a></div>
+
+      <p class="project-blurb">
+        A browser-only face toy. Drop a selfie or open the camera and Facemax slices the face into editable eye / nose / mouth strips, an identikit you can stretch, stack, animate, and print-treat.<br><br>
+        Cutout, mirror, track. Motion modes. Dither, halftone, ascii, sort. Export as GIF, MP4, or PNG. Nothing leaves the machine; the face model runs in the browser.<br><br>
+        <a href="https://sunaroch.com/facemax" target="_blank" style="color:#c0bdb8;text-decoration:none;border-bottom:1px solid #444;">Use facemax here</a>
+      </p>
+
+    </div>
+
+    <!-- Right panel -->
+    <div class="right-panel">
+      <div class="media-grid" id="media-grid"></div>
+    </div>
+
+  </div>
+
+  <!-- Lightbox -->
+  <div id="lightbox">
+    <button class="lb-arrow" id="lb-prev">←</button>
+    <div id="lb-media"></div>
+    <button class="lb-arrow" id="lb-next">→</button>
+    <button id="lb-close">✕</button>
+    <div id="lb-counter"></div>
+  </div>
+
+  <script>
+    const mediaFiles = [
+      { src: 'public/facemax/facemax10.gif', type: 'image' },
+      { src: 'public/facemax/facemax20.gif', type: 'image' },
+      { src: 'public/facemax/facemax21.gif', type: 'image' },
+      { src: 'public/facemax/facemax22.gif', type: 'image' },
+      { src: 'public/facemax/facemax23.gif', type: 'image' },
+      { src: 'public/facemax/facemax24.gif', type: 'image' },
+      { src: 'public/facemax/facemax25.gif', type: 'image' },
+      { src: 'public/facemax/facemax26.gif', type: 'image' },
+      { src: 'public/facemax/facemax27.gif', type: 'image' },
+      { src: 'public/facemax/facemax1.png', type: 'image' },
+      { src: 'public/facemax/facemax2.png', type: 'image' },
+      { src: 'public/facemax/facemax3.png', type: 'image' },
+      { src: 'public/facemax/facemax4.png', type: 'image' },
+      { src: 'public/facemax/facemax6.png', type: 'image' },
+      { src: 'public/facemax/facemax8.png', type: 'image' },
+      { src: 'public/facemax/facemax9.png', type: 'image' },
+      { src: 'public/facemax/facemax13.mp4', type: 'video', mime: 'video/mp4' }
+    ];
+
+    // Shuffle
+    for (let i = mediaFiles.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [mediaFiles[i], mediaFiles[j]] = [mediaFiles[j], mediaFiles[i]];
+    }
+
+    // Build grid
+    const grid = document.getElementById('media-grid');
+    mediaFiles.forEach((item, i) => {
+      const div = document.createElement('div');
+      div.className = 'grid-item';
+      div.dataset.index = i;
+
+      if (item.type === 'image') {
+        const img = document.createElement('img');
+        img.src = item.src;
+        img.alt = '';
+        div.appendChild(img);
+      } else {
+        const video = document.createElement('video');
+        video.autoplay = true;
+        video.loop = true;
+        video.muted = true;
+        video.playsInline = true;
+        const source = document.createElement('source');
+        source.src = item.src;
+        source.type = item.mime;
+        video.appendChild(source);
+        div.appendChild(video);
+      }
+
+      grid.appendChild(div);
+    });
+
+    // Slightly-off grid: small random nudge via transform
+    const items2 = Array.from(grid.querySelectorAll('.grid-item'));
+    items2.forEach((el) => {
+      const nudgeX = (Math.random() - 0.5) * 18;
+      const nudgeY = (Math.random() - 0.5) * 12;
+      el.style.transform = `translate(${nudgeX}px, ${nudgeY}px)`;
+    });
+
+    // Build media list
+    const items = Array.from(document.querySelectorAll('.grid-item'));
+    const mediaList = items.map(el => {
+      const img   = el.querySelector('img');
+      const video = el.querySelector('video');
+      if (img)   return { type: 'image', src: img.src };
+      if (video) {
+        const sources = Array.from(video.querySelectorAll('source')).map(s => ({ src: s.src, type: s.type }));
+        return { type: 'video', sources };
+      }
+    });
+
+    let current = 0;
+    const lightbox  = document.getElementById('lightbox');
+    const lbMedia   = document.getElementById('lb-media');
+    const lbCounter = document.getElementById('lb-counter');
+
+    function openLightbox(index) {
+      current = index;
+      renderLightbox();
+      lightbox.classList.add('open');
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('open');
+      lbMedia.innerHTML = '';
+    }
+
+    function renderLightbox() {
+      lbMedia.innerHTML = '';
+      const item = mediaList[current];
+      if (item.type === 'image') {
+        const img = document.createElement('img');
+        img.src = item.src;
+        lbMedia.appendChild(img);
+      } else {
+        const video = document.createElement('video');
+        video.autoplay = true;
+        video.loop = true;
+        video.muted = true;
+        video.controls = true;
+        video.playsInline = true;
+        item.sources.forEach(s => {
+          const src = document.createElement('source');
+          src.src = s.src; src.type = s.type;
+          video.appendChild(src);
+        });
+        lbMedia.appendChild(video);
+      }
+      lbCounter.textContent = `${current + 1} / ${mediaList.length}`;
+    }
+
+    function prev() { current = (current - 1 + mediaList.length) % mediaList.length; renderLightbox(); }
+    function next() { current = (current + 1) % mediaList.length; renderLightbox(); }
+
+    items.forEach((el, i) => el.addEventListener('click', () => openLightbox(i)));
+    document.getElementById('lb-prev').addEventListener('click', prev);
+    document.getElementById('lb-next').addEventListener('click', next);
+    document.getElementById('lb-close').addEventListener('click', closeLightbox);
+
+    lightbox.addEventListener('click', e => {
+      if (e.target === lightbox) closeLightbox();
+    });
+
+    document.addEventListener('keydown', e => {
+      if (!lightbox.classList.contains('open')) return;
+      if (e.key === 'ArrowLeft')  prev();
+      if (e.key === 'ArrowRight') next();
+      if (e.key === 'Escape')     closeLightbox();
+    });
+
+    // Swipe support
+    let _swipeX = 0;
+    lightbox.addEventListener('touchstart', e => { _swipeX = e.touches[0].clientX; }, { passive: true });
+    lightbox.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - _swipeX;
+      if (Math.abs(dx) > 50) { dx < 0 ? next() : prev(); }
+    }, { passive: true });
+  </script>
+
+  <footer class="site-footer">
+    <div class="footer-col">
+                  <a href="work.html" class="footer-label" style="color:#444;text-decoration:none;margin-bottom:8px;">Work</a>
+      <a href="searchables.html">Searchables</a>
+      <a href="facemax.html"><b>Facemax</b></a>
+      <a href="complicator.html">Complicator</a>
+      <a href="i-miss-everyone.html">I Miss Everyone</a>
+      <a href="a-hair-between-us.html">A Hair Between Us</a>
+      <a href="liquified-self-portrait.html">Liquified Self Portrait</a>
+      <a href="dtfa-website.html">DTFA Website</a>
+      <a href="suntina.html">Suntina</a>
+      <a href="archive.html">More</a>
+    </div>
+    <div class="footer-col footer-info">
+      <b>SUN AROCH</b> IS A <b>CREATIVE TECHNOLOGIST</b><br>
+      <b>DESIGNER</b><br>
+      <b>PROGRAMMER</b><br>
+      <b>MUSICIAN</b><br>
+      <b>ARTIST</b><br>
+      FROM NYC<br><br>
+      <b>BACHELORS</b>: COMPUTER SCIENCE @ BARNARD<br>
+      <b>MASTER</b>: APPLIED AI FOR ART AND DESIGN @ ELISAVA (CURRENT)<br><br>
+      <b>EMAIL</b>: AROCHSUN@GMAIL.COM<br>
+      <a href="https://www.instagram.com/sunaroch/" target="_blank"><b>INSTAGRAM</b></a><br>
+      <a href="https://www.linkedin.com/in/sunaroch" target="_blank"><b>LINKEDIN</b></a>
+    </div>
+  </footer>
+
+  <script>
+    // Page transition
+    const _overlay = document.getElementById('page-overlay');
+    function _navigateTo(url) {
+      _overlay.style.animation = 'none';
+      _overlay.style.transition = 'none';
+      _overlay.style.opacity = '0';
+      void _overlay.offsetHeight; // force reflow
+      _overlay.style.transition = 'opacity 0.5s ease';
+      _overlay.style.opacity = '1';
+      _overlay.style.pointerEvents = 'all';
+      setTimeout(() => { window.location.href = url; }, 500);
+    }
+    document.querySelectorAll('a[href]').forEach(a => {
+      const href = a.getAttribute('href');
+      if (href && !href.startsWith('#') && !href.startsWith('http') && !href.startsWith('mailto')) {
+        a.addEventListener('click', e => { e.preventDefault(); _navigateTo(href); });
+      }
+    });
+
+    // Keyboard: ← → through projects (when lightbox closed)
+    document.addEventListener('keydown', e => {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      const lb = document.getElementById('lightbox');
+      if (lb && lb.classList.contains('open')) return;
+      const links = document.querySelectorAll('.project-nav a[href]');
+      if (links.length < 2) return;
+      e.preventDefault();
+      const href = (e.key === 'ArrowLeft' ? links[0] : links[1]).getAttribute('href');
+      if (href) _navigateTo(href);
+    });
+
+    // Fix Safari bfcache: reset overlay when page is restored from back/forward cache
+    window.addEventListener('pageshow', e => {
+      if (e.persisted) {
+        _overlay.style.transition = 'none';
+        _overlay.style.opacity = '0';
+        _overlay.style.pointerEvents = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

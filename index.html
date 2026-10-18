@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Sun Aroch</title>
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="apple-touch-icon" href="/favicon.png">
@@ -13,11 +13,17 @@
       padding: 0;
     }
 
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+
     body {
       font-family: system-ui, -apple-system, sans-serif;
       overflow-y: scroll;
       background: #000;
       height: 500vh;
+      -webkit-overflow-scrolling: touch;
     }
 
     #helix-container {
@@ -68,14 +74,17 @@
 
     nav {
       position: fixed;
-      top: 28px;
+      top: 0;
       left: 0;
       right: 0;
       z-index: 200;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 28px;
+      padding: calc(28px + env(safe-area-inset-top, 0px))
+               calc(28px + env(safe-area-inset-right, 0px))
+               16px
+               calc(28px + env(safe-area-inset-left, 0px));
       font-family: system-ui, -apple-system, sans-serif;
       font-size: 21px;
       color: #c0bdb8;
@@ -89,60 +98,23 @@
       color: #c0bdb8;
       text-decoration: none;
       pointer-events: all;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
     }
 
     .nav-name {
       pointer-events: none;
     }
 
-    .nav-links a + a,
-    .nav-work + a,
-    .nav-work + .nav-info {
-      margin-left: 80px;
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 80px;
     }
 
-    .nav-work,
     .nav-info {
       position: relative;
       display: inline-block;
-    }
-
-    .work-dropdown {
-      position: absolute;
-      top: calc(100% + 16px);
-      right: 0;
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      text-align: right;
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(-4px);
-      transition: opacity 0.25s ease, transform 0.25s ease;
-    }
-
-    .work-dropdown.open {
-      opacity: 1;
-      pointer-events: all;
-      transform: translateY(0);
-    }
-
-    .work-dropdown li {
-      line-height: 1.8;
-    }
-
-    .work-dropdown li a {
-      font-size: 14px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: #c0bdb8;
-      text-decoration: none;
-      font-weight: 300;
-      white-space: nowrap;
-    }
-
-    .work-dropdown li a:hover {
-      color: #fff;
     }
 
     .info-dropdown {
@@ -192,29 +164,33 @@
         flex-direction: column;
         align-items: flex-start;
         gap: 14px;
-        top: 20px;
-        padding: 0 20px;
+        padding: calc(20px + env(safe-area-inset-top, 0px))
+                 calc(20px + env(safe-area-inset-right, 0px))
+                 16px
+                 calc(20px + env(safe-area-inset-left, 0px));
+        font-size: 18px;
       }
       .nav-links {
-        display: flex;
         gap: 32px;
+        pointer-events: all;
       }
-      .nav-links a + a,
-      .nav-work + a,
-      .nav-work + .nav-info {
-        margin-left: 0;
-      }
-      .work-dropdown {
-        right: auto;
-        left: 0;
-        text-align: left;
+      .nav-links a {
+        padding: 6px 0;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
       }
       .info-dropdown {
         right: auto;
         left: 0;
         text-align: left;
-        width: calc(100vw - 40px);
-        max-width: 260px;
+        width: calc(100vw - 40px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
+        max-width: 280px;
+        max-height: min(70vh, 480px);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        background: rgba(0,0,0,0.92);
+        padding: 4px 0 12px;
       }
       #logo {
         max-width: 85vw;
@@ -251,19 +227,8 @@
   <nav>
     <span class="nav-name">SUN AROCH</span>
     <div class="nav-links">
-      <div class="nav-work" id="nav-work">
-        <a href="#" id="work-trigger">Work</a>
-        <ul class="work-dropdown" id="work-dropdown">
-          <li><a href="complicator.html">Complicator</a></li>
-          <li><a href="i-miss-everyone.html">I Miss Everyone</a></li>
-          <li><a href="a-hair-between-us.html">A Hair Between Us</a></li>
-          <li><a href="liquified-self-portrait.html">Liquified Self Portrait</a></li>
-          <li><a href="dtfa-website.html">DTFA Website</a></li>
-          <li><a href="suntina.html">Suntina</a></li>
-          <li><a href="archive.html">More</a></li>
-        </ul>
-      </div>
-<div class="nav-info" id="nav-info">
+      <a href="work.html">Work</a>
+      <div class="nav-info" id="nav-info">
         <a href="#">Info</a>
         <div class="info-dropdown" id="info-dropdown">
           <b>SUN AROCH</b> IS A <b>CREATIVE TECHNOLOGIST</b><br>
@@ -283,7 +248,21 @@
   </nav>
 
   <script>
-    const TILES = [
+        const TILES = [
+      // Searchables
+      { src: 'public/searchables/searchables1.png', type: 'image', w: 112, h: 72, link: 'searchables.html' },
+      // Facemax
+      { src: 'public/facemax/facemax20.gif', type: 'image', w: 70,  h: 88,  link: 'facemax.html' },
+      { src: 'public/facemax/facemax21.gif', type: 'image', w: 74,  h: 86,  link: 'facemax.html' },
+      { src: 'public/facemax/facemax22.gif', type: 'image', w: 72,  h: 84,  link: 'facemax.html' },
+      { src: 'public/facemax/facemax23.gif', type: 'image', w: 110,  h: 70,  link: 'facemax.html' },
+      { src: 'public/facemax/facemax24.gif', type: 'image', w: 68,  h: 90,  link: 'facemax.html' },
+      { src: 'public/facemax/facemax25.gif', type: 'image', w: 108,  h: 64,  link: 'facemax.html' },
+      { src: 'public/facemax/facemax26.gif', type: 'image', w: 76,  h: 88,  link: 'facemax.html' },
+      { src: 'public/facemax/facemax27.gif', type: 'image', w: 104,  h: 66,  link: 'facemax.html' },
+      { src: 'public/facemax/facemax10.gif', type: 'image', w: 70,  h: 82,  link: 'facemax.html' },
+      { src: 'public/facemax/facemax3.png', type: 'image', w: 114,  h: 62,  link: 'facemax.html' },
+      { src: 'public/facemax/facemax9.png', type: 'image', w: 76,  h: 90,  link: 'facemax.html' },
       // Complicator — thumbs in helix, full-res on hover
       { src: 'public/complicator/thumbs/sunaroch_complicator_installation1.jpg', preview: 'public/complicator/sunaroch_complicator_installation1.png', type: 'image', w: 110, h: 73, link: 'complicator.html' },
       { src: 'public/complicator/thumbs/sunaroch_complicator_installation2.jpg', preview: 'public/complicator/sunaroch_complicator_installation2.png', type: 'image', w: 78,  h: 90, link: 'complicator.html' },
@@ -398,7 +377,7 @@
       { src: 'public/archive/archive20.png', type: 'image', w: 44,  h: 51,  link: 'archive.html' },
       { src: 'public/archive/archive21.png', type: 'image', w: 70,  h: 40,  link: 'archive.html' },
       { src: 'public/archive/archive22.gif', type: 'image', w: 40,  h: 48,  link: 'archive.html' },
-      { src: 'public/archive/archive23.png', type: 'image', w: 68,  h: 38,  link: 'archive.html' },
+      { src: 'public/archive/archive23.png', type: 'image', w: 68,  h: 38,  link: 'archive.html' }
     ];
 
     // Shuffle tiles
@@ -558,27 +537,16 @@
       });
     });
 
-    // Work dropdown
-    const navWork    = document.getElementById('nav-work');
-    const workDropdown = document.getElementById('work-dropdown');
-
-    navWork.querySelector('a').addEventListener('click', (e) => {
-      e.preventDefault();
-      const opening = !workDropdown.classList.contains('open');
-      infoDropdown.classList.remove('open');
-      workDropdown.classList.toggle('open', opening);
-    });
-    workDropdown.addEventListener('click', (e) => e.stopPropagation());
-
     const navInfo      = document.getElementById('nav-info');
     const infoDropdown = document.getElementById('info-dropdown');
     navInfo.querySelector('a').addEventListener('click', (e) => {
       e.preventDefault();
-      const opening = !infoDropdown.classList.contains('open');
-      workDropdown.classList.remove('open');
-      infoDropdown.classList.toggle('open', opening);
+      infoDropdown.classList.toggle('open');
     });
     infoDropdown.addEventListener('click', (e) => e.stopPropagation());
+    document.addEventListener('click', (e) => {
+      if (!navInfo.contains(e.target)) infoDropdown.classList.remove('open');
+    });
 
     window.addEventListener('resize', recalculate);
 

@@ -16,11 +16,13 @@
 
     .layout {
       display: flex;
-      height: 100vh;
+      align-items: flex-start;
     }
 
     .left-panel {
       flex: 0 0 42%;
+      position: sticky;
+      top: 0;
       height: 100vh;
       padding: 28px;
       padding-top: 320px;
@@ -96,22 +98,26 @@
 
     .right-panel {
       flex: 1;
-      height: 100vh;
-      overflow-y: auto;
       padding: 28px 28px 80px;
+      min-width: 0;
     }
 
-    .right-panel::-webkit-scrollbar { display: none; }
-
     .media-grid {
-      position: relative;
+      columns: 1;
+      column-gap: 24px;
       width: 100%;
     }
 
     .grid-item {
-      position: absolute;
+      break-inside: avoid;
+      -webkit-column-break-inside: avoid;
+      display: inline-block;
+      width: 100%;
       cursor: pointer;
       overflow: hidden;
+      margin-bottom: 24px;
+      position: relative;
+      background: #111;
     }
 
     .grid-item img,
@@ -120,6 +126,7 @@
       height: auto;
       display: block;
       transition: opacity 0.25s ease;
+      background: #111;
     }
 
     .grid-item:hover img,
@@ -333,60 +340,42 @@
       'public/DTFA/DTFA3.mp4',
     ];
 
-    // Shuffle
     for (let i = videos.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [videos[i], videos[j]] = [videos[j], videos[i]];
     }
 
-    const media = videos.map(src => ({ type: 'video', src }));
-
-    // Build grid
     const grid = document.getElementById('media-grid');
-    media.forEach((item, i) => {
+    const items = [];
+
+    videos.forEach((src, i) => {
       const div = document.createElement('div');
       div.className = 'grid-item';
       div.dataset.index = i;
+
       const video = document.createElement('video');
+      video.src = src;
       video.autoplay = true;
       video.loop = true;
       video.muted = true;
+      video.defaultMuted = true;
       video.playsInline = true;
-      const source = document.createElement('source');
-      source.src = item.src;
-      source.type = 'video/quicktime';
-      video.appendChild(source);
+      video.setAttribute('playsinline', '');
+      video.setAttribute('webkit-playsinline', '');
+      video.setAttribute('muted', '');
+      video.preload = 'auto';
+      video.disablePictureInPicture = true;
+
+      video.addEventListener('loadeddata', () => {
+        video.play().catch(() => {});
+      });
+
       div.appendChild(video);
       grid.appendChild(div);
+      items.push(div);
     });
 
-    // Collage layout
-    const containerWidth = grid.offsetWidth;
-    const rowHeight = window.innerWidth < 768 ? 180 : 700;
-    const rows = media.length;
-    const items2 = Array.from(grid.querySelectorAll('.grid-item'));
-    items2.forEach((el, i) => {
-      const width = containerWidth * (0.55 + Math.random() * 0.35);
-      const maxLeft = containerWidth - width;
-      const left = Math.random() * maxLeft;
-      const baseY = i * rowHeight;
-      const offsetY = (Math.random() - 0.5) * rowHeight * 0.6;
-      el.style.left = left + 'px';
-      el.style.top = Math.max(0, baseY + offsetY) + 'px';
-      el.style.width = width + 'px';
-      el.style.zIndex = Math.floor(Math.random() * 15);
-    });
-    grid.style.height = (rows * rowHeight + 300) + 'px';
-
-    // Build media list
-    const items = Array.from(document.querySelectorAll('.grid-item'));
-    const mediaList = items.map(el => {
-      const video = el.querySelector('video');
-      if (video) {
-        const sources = Array.from(video.querySelectorAll('source')).map(s => ({ src: s.src, type: s.type }));
-        return { type: 'video', sources };
-      }
-    });
+    const mediaList = videos.map(src => ({ type: 'video', src, mime: 'video/mp4' }));
 
     let current = 0;
     const lightbox  = document.getElementById('lightbox');
@@ -408,16 +397,14 @@
       lbMedia.innerHTML = '';
       const item = mediaList[current];
       const video = document.createElement('video');
+      video.src = item.src;
       video.autoplay = true;
       video.loop = true;
       video.muted = true;
       video.controls = true;
       video.playsInline = true;
-      item.sources.forEach(s => {
-        const src = document.createElement('source');
-        src.src = s.src; src.type = s.type;
-        video.appendChild(src);
-      });
+      video.setAttribute('playsinline', '');
+      video.setAttribute('muted', '');
       lbMedia.appendChild(video);
       lbCounter.textContent = `${current + 1} / ${mediaList.length}`;
     }
@@ -441,7 +428,6 @@
       if (e.key === 'Escape')     closeLightbox();
     });
 
-    // Swipe support
     let _swipeX = 0;
     lightbox.addEventListener('touchstart', e => { _swipeX = e.touches[0].clientX; }, { passive: true });
     lightbox.addEventListener('touchend', e => {
@@ -453,7 +439,9 @@
 
   <footer class="site-footer">
     <div class="footer-col">
-      <span class="footer-label">Work</span>
+            <a href="work.html" class="footer-label" style="color:#444;text-decoration:none;margin-bottom:8px;">Work</a>
+      <a href="searchables.html">Searchables</a>
+      <a href="facemax.html">Facemax</a>
       <a href="complicator.html">Complicator</a>
       <a href="i-miss-everyone.html">I Miss Everyone</a>
       <a href="a-hair-between-us.html">A Hair Between Us</a>
@@ -496,6 +484,19 @@
         a.addEventListener('click', e => { e.preventDefault(); _navigateTo(href); });
       }
     });
+
+    // Keyboard: ← → through projects (when lightbox closed)
+    document.addEventListener('keydown', e => {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      const lb = document.getElementById('lightbox');
+      if (lb && lb.classList.contains('open')) return;
+      const links = document.querySelectorAll('.project-nav a[href]');
+      if (links.length < 2) return;
+      e.preventDefault();
+      const href = (e.key === 'ArrowLeft' ? links[0] : links[1]).getAttribute('href');
+      if (href) _navigateTo(href);
+    });
+
     // Fix Safari bfcache: reset overlay when page is restored from back/forward cache
     window.addEventListener('pageshow', e => {
       if (e.persisted) {
