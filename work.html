@@ -119,8 +119,54 @@
       border-bottom: 1px solid #444;
     }
 
+    .project-list {
+      position: relative;
+      z-index: 1;
+      padding: calc(100px + env(safe-area-inset-top, 0px)) 28px 48px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 28px;
+    }
+
+    .project-group {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+    }
+
+    .project-group-label {
+      color: #444;
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+      line-height: 1.4;
+    }
+
+    .project-list a {
+      color: #666;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 300;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      line-height: 1.6;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .project-list a:hover { color: #fff; }
+    }
+
+    .project-list a:active { color: #c0bdb8; }
+
     #feed {
-      padding: calc(100px + env(safe-area-inset-top, 0px)) 16px calc(80px + env(safe-area-inset-bottom, 0px));
+      padding: 0 16px calc(80px + env(safe-area-inset-bottom, 0px));
       columns: 4;
       column-gap: 12px;
       width: 100%;
@@ -151,20 +197,26 @@
       height: auto;
       display: block;
       vertical-align: top;
-      transition: opacity 0.25s ease;
+      opacity: 0;
+      transition: opacity 0.45s ease;
       pointer-events: none;
       border-radius: 0;
     }
 
+    .feed-item.is-ready img,
+    .feed-item.is-ready video {
+      opacity: 1;
+    }
+
     @media (hover: hover) and (pointer: fine) {
-      .feed-item:hover img,
-      .feed-item:hover video {
+      .feed-item.is-ready:hover img,
+      .feed-item.is-ready:hover video {
         opacity: 0.75;
       }
     }
 
-    .feed-item:active img,
-    .feed-item:active video {
+    .feed-item.is-ready:active img,
+    .feed-item.is-ready:active video {
       opacity: 0.7;
     }
 
@@ -208,8 +260,14 @@
         font-size: 13px;
         letter-spacing: 0.1em;
       }
+      .project-list {
+        padding: calc(130px + env(safe-area-inset-top, 0px)) 20px 36px;
+        gap: 24px;
+      }
+      .project-group-label { font-size: 10px; }
+      .project-list a { font-size: 12px; letter-spacing: 0.12em; }
       #feed {
-        padding: calc(130px + env(safe-area-inset-top, 0px)) 8px calc(48px + env(safe-area-inset-bottom, 0px));
+        padding: 0 8px calc(48px + env(safe-area-inset-bottom, 0px));
         columns: 2;
         column-gap: 8px;
       }
@@ -265,6 +323,30 @@
       </div>
     </div>
   </nav>
+
+  <div class="project-list" aria-label="Projects">
+    <div class="project-group">
+      <div class="project-group-label">Apps + sites</div>
+      <a href="searchables.html">Searchables</a>
+      <a href="facemax-project.html">Facemax</a>
+      <a href="dtfa-website.html">DTFA</a>
+    </div>
+    <div class="project-group">
+      <div class="project-group-label">Master's thesis</div>
+      <a href="complicator.html">Complicator</a>
+    </div>
+    <div class="project-group">
+      <div class="project-group-label">Video experiments</div>
+      <a href="a-hair-between-us.html">A Hair Between Us</a>
+      <a href="i-miss-everyone.html">I Miss Everyone</a>
+      <a href="liquified-self-portrait.html">Liquified Self Portrait</a>
+    </div>
+    <div class="project-group">
+      <div class="project-group-label">Graphics</div>
+      <a href="suntina.html">Suntina</a>
+      <a href="archive.html">More</a>
+    </div>
+  </div>
 
   <div id="feed"></div>
   <div id="sentinel"></div>
@@ -409,8 +491,8 @@
     const feed = document.getElementById('feed');
     const isMobile = () => window.matchMedia('(max-width: 768px)').matches
       || (navigator.maxTouchPoints > 0 && window.innerWidth < 900);
-    const BATCH = () => (isMobile() ? 12 : 24);
-    const SEED = () => (isMobile() ? 24 : 48);
+    const BATCH = () => (isMobile() ? 8 : 12);
+    const SEED = () => (isMobile() ? 12 : 20);
     let pool = shuffle(ITEMS);
     let poolIndex = 0;
     let appending = false;
@@ -423,51 +505,7 @@
       return pool[poolIndex++];
     }
 
-    function createItem(item) {
-      const el = document.createElement('div');
-      el.className = 'feed-item';
-      el.dataset.link = item.link;
-      el.setAttribute('role', 'link');
-      el.setAttribute('tabindex', '0');
-
-      if (item.type === 'image') {
-        const img = document.createElement('img');
-        img.src = item.src;
-        img.alt = '';
-        img.loading = 'lazy';
-        img.decoding = 'async';
-        img.draggable = false;
-        el.appendChild(img);
-      } else {
-        const video = document.createElement('video');
-        video.muted = true;
-        video.defaultMuted = true;
-        video.loop = true;
-        video.playsInline = true;
-        video.preload = isMobile() ? 'none' : 'metadata';
-        video.setAttribute('playsinline', '');
-        video.setAttribute('webkit-playsinline', '');
-        video.setAttribute('muted', '');
-        const source = document.createElement('source');
-        source.src = item.src;
-        source.type = item.src.endsWith('.mov') ? 'video/quicktime' : 'video/mp4';
-        video.appendChild(source);
-        el.appendChild(video);
-
-        const io = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              if (video.readyState < 2) video.load();
-              video.play().catch(() => {});
-            } else {
-              video.pause();
-            }
-          });
-        }, { rootMargin: isMobile() ? '80px' : '200px' });
-        io.observe(video);
-      }
-
-      // Prefer click; guard against accidental drag-scroll taps on mobile
+    function wireNav(el, item) {
       let touchX = 0, touchY = 0, moved = false;
       el.addEventListener('touchstart', (e) => {
         const t = e.changedTouches[0];
@@ -492,29 +530,105 @@
           _navigateTo(item.link);
         }
       });
+    }
+
+    function loadImage(src) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.alt = '';
+        img.decoding = 'async';
+        img.draggable = false;
+        img.onload = () => resolve(img);
+        img.onerror = () => resolve(null);
+        img.src = src;
+      });
+    }
+
+    async function prepareItem(item) {
+      const el = document.createElement('div');
+      el.className = 'feed-item';
+      el.dataset.link = item.link;
+      el.setAttribute('role', 'link');
+      el.setAttribute('tabindex', '0');
+      wireNav(el, item);
+
+      if (item.type === 'image') {
+        const img = await loadImage(item.src);
+        if (!img) return null;
+        if (img.decode) {
+          try { await img.decode(); } catch (_) {}
+        }
+        el.appendChild(img);
+        requestAnimationFrame(() => el.classList.add('is-ready'));
+        return el;
+      }
+
+      const video = document.createElement('video');
+      video.muted = true;
+      video.defaultMuted = true;
+      video.loop = true;
+      video.playsInline = true;
+      video.preload = 'metadata';
+      video.setAttribute('playsinline', '');
+      video.setAttribute('webkit-playsinline', '');
+      video.setAttribute('muted', '');
+      const source = document.createElement('source');
+      source.src = item.src;
+      source.type = item.src.endsWith('.mov') ? 'video/quicktime' : 'video/mp4';
+      video.appendChild(source);
+      el.appendChild(video);
+
+      await new Promise((resolve) => {
+        let done = false;
+        const finish = () => {
+          if (done) return;
+          done = true;
+          resolve();
+        };
+        video.addEventListener('loadeddata', finish, { once: true });
+        video.addEventListener('error', finish, { once: true });
+        video.load();
+        setTimeout(finish, 2500);
+      });
+
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            video.play().catch(() => {});
+          } else {
+            video.pause();
+          }
+        });
+      }, { rootMargin: isMobile() ? '80px' : '200px' });
+      io.observe(video);
+
+      requestAnimationFrame(() => el.classList.add('is-ready'));
       return el;
     }
 
-    function appendBatch(n = BATCH()) {
+    async function appendBatch(n = BATCH()) {
       if (appending) return;
       appending = true;
-      const frag = document.createDocumentFragment();
-      for (let i = 0; i < n; i++) {
-        frag.appendChild(createItem(nextItem()));
+      try {
+        const prepared = await Promise.all(
+          Array.from({ length: n }, () => prepareItem(nextItem()))
+        );
+        const frag = document.createDocumentFragment();
+        prepared.forEach((el) => { if (el) frag.appendChild(el); });
+        feed.appendChild(frag);
+      } finally {
+        appending = false;
       }
-      feed.appendChild(frag);
-      appending = false;
     }
 
-    // Seed enough content to fill viewport + buffer
     appendBatch(SEED());
 
     const sentinel = document.getElementById('sentinel');
     const infinite = new IntersectionObserver((entries) => {
-      if (entries.some(e => e.isIntersecting)) {
+      if (entries.some(e => e.isIntersecting) && !appending) {
         appendBatch();
       }
-    }, { rootMargin: isMobile() ? '600px' : '1200px' });
+    }, { rootMargin: isMobile() ? '400px' : '800px' });
     infinite.observe(sentinel);
 
     // Info dropdown
